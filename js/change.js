@@ -26,28 +26,17 @@ var curpos=0;
 var v=1;
 var showcls = 0;
 var showcls2 = 0;
-var showcls3 = 0;
+var showcls3 = 1;
 var tablelenth = 0;
 var countinrec = 0;
 var previd = "";
 var findsize = 100;
+
 function online()
 {
 
 }
-/*
-function changefind() {
-    var img = document.getElementById('find');
-    if (findup) {
-        img.src = './img/dawn.gif';
-        findup = false;
-    }
-    else {
-        img.src = './img/up.gif';
-        findup = true;  
-    }
 
-}  */
 function changetypef(f) {
     //findtype = f;
     v = f;
@@ -227,185 +216,174 @@ if (ii==0 )
 }
 
 function setup(ul) {
-// var imageDiv = document.getElementById("mainImage");
- document.show.src="./img/back_img.jpg"; 
- document.show.style.width='600px';
- //document.show.style.position='absolute';
- //document.show.style.left='200px';
- //document.show.style.top='50px';
+    // var imageDiv = document.getElementById("mainImage");
+     document.show.src="./img/back_img.jpg"; 
+     document.show.style.width='600px';
+     //document.show.style.position='absolute';
+     //document.show.style.left='200px';
+     //document.show.style.top='50px';
 
- var t = 0;
-   while (t < selarr.length) {
-       prevselarr[t] = -1;
-       selarr[t] = -1;
-        t++;
-    }
-    var gr = document.getElementById("group");
-    var t = document.getElementById("tablID");
-    var ulsc = document.getElementById("ulclassify");
-    var h1 = gr.offsetHeight;
-    var h2 = t.offsetHeight;
-    ulsc.style.height = h1 + h2 + "px";
-
-var ff=document.getElementById("space");
-var ffs="";
-for (var i=0;i<10;i++)
-{
-    ffs = ffs + "<div class='empty_div' id='div0" + i + "'></div><div class='empty_div' id='div1" + i + "'></div><div class='empty_div' id='div2" + i + "'></div><div class='empty_div' id='div3" + i + "'></div><div class='empty_div'  id='div4" + i + "'></div>";
-}
-
-ff.innerHTML=ffs;
-
-var s="";
-var dd = document.getElementById("recucle");
-s = s + "<div id='recle' class='fgr'>";
-s =s+ "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
-//s =s+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
-s=s+"<div class='recucle' onClick='openRecucle(1);'>"+trans[14]+"</div>";
-
- s = s +"<div class=\"submit\" id='online' onClick=\"online();\">"+ trans[2] +"</div>"; 
- //s = s +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
-
-
-dd.innerHTML=s;
-
-s=""; 
-isinrec=data[0].length+1;
- var table = document.getElementById('tablID');
- var trList = table.getElementsByTagName('tr');
- var tdListName = trList[0].getElementsByTagName('td');
- tablelenth = tdListName.length;
-/* for (j = 0; j < tablelenth - 2; j++) {
-    var ss = '';
-
-   
-
-    if (tdListName[j].innerText== trans[0])
-         gr=j;
-   
-    if (tdListName[j].innerText == trans[1])
-	pgr=j;
-
- }  */
-
-var os= navigator.userAgent;
-
-var osArr=["Windows NT 5.1","Windows NT 5.2","Windows NT 6.1","Windows NT 6.0"];
-var isNormalOs=false;
-for (var i=0;i<osArr.length;i++)
-{
-    if (os.indexOf(osArr[i])>=0)
-     isNormalOs=true;
-}
-
-hasIE = /*@cc_on (@_jscript_version+"").replace(/\d\./, ''); @*/false;
-hasOpera = !!window.opera && window.opera.version && window.opera.version();
-hasChrome = !!window.chrome && ( /chrome\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
-hasFireFox = !!window.sidebar && ( /firefox\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
-hasSafari = !window.external && !hasOpera && ( /safari\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
-
-if (hasOpera!=false || hasFireFox!=false || hasSafari!=false )
-alert("Корректная работа HTML-каталога обеспечиватся только для броузеров Google Chrome и Microsoft Explorer(версии 9.0 и выше). Для вашего типа броузера часть функций либо весь HTML-каталог могут неработоспособны!"); 
-if (isNormalOs!=true)
-{
-var osver=os.substr(indexOf("Windows"),14); 
-alert("Вы используете "+osver+" и Internet Explorer"+os.substr(os.indexOf("MSIE")+5,3)+" Для работы с каталогом необходима операционная система Windows XP и выше, Internet Explorer 9.0 и выше");
-close();
-
-}
-var uaVers;
-
-if (os.indexOf ("MSIE") >= 0)
-  {
-   uaVers=os.substr(os.indexOf("MSIE")+5,3);
-   if (uaVers.charAt(0)<'9' && uaVers.charAt(1)=='.') {alert('Вы используете устаревшую версию Internet Explorer, необходима версия 9.0 и выше');close();  };
-  }
-
- 
- var d=0;
- var jj=0;
-
- class_tree();
- var previmg=-1;
- var prevpos=-1;
- var buff = [];
- for (var i = 0; i < grNames.length; i++)
- {
-     s2 = '';
-     s2 += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  >" + grNames[i][1] + ". " + grNames[i][0] + "</div>"; 
- 
-s2+= "<div  id='ul"+i+"' style='display:none; margin-left:10px; padding-bottom: 6px'>";
-  //if( isgetdetal(i))
-for (var j=0;j<allSubgrGrNames[i].length;j++)
-    {
- var nn=0;
-       if (allSubgrGrData[jj][0][2]=='-1')
-           {
-            allSubgrGrData[jj][0][0]=numbimg(data[allSubgrGrData[jj][0][1] - 1][0]); 
-           }
-        allSubgrGrNames[i][j][1]='';
-        s2 += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
-         s2 += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
-       
-        {
-          for (var k=1;k<allSubgrGrData[jj].length;k++)
-          {  
-            var n=-1; 
-            for (var m=0;m<grIllustration.length;m++)
-            if (grIllustration[m][0]==allSubgrGrData[jj][k][1])
-              n=m;  
-       	  if(allSubgrGrData[jj][k][0]!=0) razn= data[allSubgrGrData[jj][k][1] - 1][0]-allSubgrGrData[jj][k][0];
-           if (allSubgrGrData[jj][k][2]=='-1')
-           {
-              
-            allSubgrGrData[jj][k][0]=numbimg(data[allSubgrGrData[jj][k][1] - 1][0]); 
-           }
-	   
-           // if (allSubgrGrData[jj][k][2] != '-1')
-            {
-                var ss = "";
-                data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
-
-              if (allSubgrGrData[jj][k][5] != 0 && allSubgrGrData[jj][k][3] != data[allSubgrGrData[jj][k][1] - 1][2]) {
-                  ss = " " + data[allSubgrGrData[jj][k][1] - 1][2];
-                 // data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
-               }
-               if (allSubgrGrData[jj][k][3] == data[allSubgrGrData[jj][k][1] - 1][2])
-               {
-                  data[allSubgrGrData[jj][k][1] - 1][3]= data[allSubgrGrData[jj][k][1] - 1][2];
-                  data[allSubgrGrData[jj][k][1] - 1][2]='';
-                  
-               }
-              data[allSubgrGrData[jj][k][1] - 1][isinrec - 1]=0;
-              data[allSubgrGrData[jj][k][1] - 1][tablelenth-1] = grNames[i][1]+" "+ grNames[i][0];
-              data[allSubgrGrData[jj][k][1] - 1][tablelenth] =allSubgrGrNames[i][j][1]+" "+ allSubgrGrNames[i][j][0];
-           
-             if (n==-1)
-             s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" +allSubgrGrData[jj][k][1]+"' >&nbsp;" + allSubgrGrData[jj][k][3]+ ss + "</div></a>";
-              else
-             {
-
-                s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[n][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
-             }             
- 
-            }
-                
-   	         d++;
-   	     }
-   	     jj++;
+     var t = 0;
+       while (t < selarr.length) {
+           prevselarr[t] = -1;
+           selarr[t] = -1;
+            t++;
         }
-       s2+="</div>"
+        var gr = document.getElementById("group");
+        var t = document.getElementById("tablID");
+        var ulsc = document.getElementById("ulclassify");
+        var h1 = gr.offsetHeight;
+        var h2 = t.offsetHeight;
+        ulsc.style.height = h1 + h2 + "px";
+
+    var ff=document.getElementById("space");
+    var ffs="";
+    for (var i=0;i<10;i++)
+    {
+        ffs = ffs + "<div class='empty_div' id='div0" + i + "'></div><div class='empty_div' id='div1" + i + "'></div><div class='empty_div' id='div2" + i + "'></div><div class='empty_div' id='div3" + i + "'></div><div class='empty_div'  id='div4" + i + "'></div>";
     }
 
-   s2 += "</div>";
-   buff.push(s2);
+    ff.innerHTML=ffs;
+
+    var s="";
+    var dd = document.getElementById("recucle");
+    s = s + "<div id='recle' class='fgr'>";
+    s =s+ "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
+    //s =s+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
+    s=s+"<div class='recucle' onClick='openRecucle(1);'>"+trans[14]+"</div>";
+
+     s = s +"<div class=\"submit\" id='online' onClick=\"online();\">"+ trans[2] +"</div>"; 
+     //s = s +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
+
+
+    dd.innerHTML=s;
+
+    s=""; 
+    isinrec=data[0].length+1;
+     var table = document.getElementById('tablID');
+     var trList = table.getElementsByTagName('tr');
+     var tdListName = trList[0].getElementsByTagName('td');
+     tablelenth = tdListName.length;
+    /* for (j = 0; j < tablelenth - 2; j++) {
+        var ss = '';
+
+   
+
+        if (tdListName[j].innerText== trans[0])
+             gr=j;
+   
+        if (tdListName[j].innerText == trans[1])
+	    pgr=j;
+
+     }  */
+
+    var os= navigator.userAgent;
+
+    var osArr=["Windows NT 5.1","Windows NT 5.2","Windows NT 6.1","Windows NT 6.0"];
+    var isNormalOs=false;
+    for (var i=0;i<osArr.length;i++)
+    {
+        if (os.indexOf(osArr[i])>=0)
+         isNormalOs=true;
+    }
+
+    hasIE = /*@cc_on (@_jscript_version+"").replace(/\d\./, ''); @*/false;
+    hasOpera = !!window.opera && window.opera.version && window.opera.version();
+    hasChrome = !!window.chrome && ( /chrome\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
+    hasFireFox = !!window.sidebar && ( /firefox\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
+    hasSafari = !window.external && !hasOpera && ( /safari\/([\d\.]+)/i.exec( navigator.userAgent )[ 1 ] || true );
+
+    if (hasOpera!=false || hasFireFox!=false || hasSafari!=false )
+    alert("Корректная работа HTML-каталога обеспечиватся только для броузеров Google Chrome и Microsoft Explorer(версии 9.0 и выше). Для вашего типа броузера часть функций либо весь HTML-каталог могут неработоспособны!"); 
+    if (isNormalOs!=true)
+    {
+    var osver=os.substr(indexOf("Windows"),14); 
+    alert("Вы используете "+osver+" и Internet Explorer"+os.substr(os.indexOf("MSIE")+5,3)+" Для работы с каталогом необходима операционная система Windows XP и выше, Internet Explorer 9.0 и выше");
+    close();
+
+    }
+    var uaVers;
+
+    if (os.indexOf ("MSIE") >= 0)
+    {
+    uaVers=os.substr(os.indexOf("MSIE")+5,3);
+    if (uaVers.charAt(0)<'9' && uaVers.charAt(1)=='.') {alert('Вы используете устаревшую версию Internet Explorer, необходима версия 9.0 и выше');close();  };
+    }
+
+ 
+    var d=0;
+    var jj=0;
+
+    class_tree();
+    var previmg=-1;
+    var prevpos=-1;
+    var buff = [];
+    for (var i = 0; i < grNames.length; i++)
+    {
+        s2 = '';
+        s2 += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  >" + grNames[i][1] + ". " + grNames[i][0] + "</div>"; 
+ 
+        s2+= "<div  id='ul"+i+"' style='display:none; margin-left:10px; padding-bottom: 6px'>";
+        for (var j=0;j<allSubgrGrNames[i].length;j++)
+        {
+            var nn=0;
+            if (allSubgrGrData[jj][0][2]=='-1')
+            {
+                allSubgrGrData[jj][0][0]=numbimg(data[allSubgrGrData[jj][0][1] - 1][0]); 
+            }
+            allSubgrGrNames[i][j][1]='';
+            s2 += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
+            s2 += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
+       
+            for (var k=1;k<allSubgrGrData[jj].length;k++)
+            {
+                var n=-1; 
+                for (var m=0;m<grIllustration.length;m++)
+                    if (grIllustration[m][0]==allSubgrGrData[jj][k][1])
+                        n=m;  
+       	        if(allSubgrGrData[jj][k][0]!=0) razn= data[allSubgrGrData[jj][k][1] - 1][0]-allSubgrGrData[jj][k][0];
+                    if (allSubgrGrData[jj][k][2]=='-1')
+                    {
+                        allSubgrGrData[jj][k][0]=numbimg(data[allSubgrGrData[jj][k][1] - 1][0]); 
+                    }
+                {
+                    var ss = "";
+                    data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
+
+                    if (allSubgrGrData[jj][k][5] != 0 && allSubgrGrData[jj][k][3] != data[allSubgrGrData[jj][k][1] - 1][2])
+                    {
+                        ss = " " + data[allSubgrGrData[jj][k][1] - 1][2];
+                    }
+                    if (allSubgrGrData[jj][k][3] == data[allSubgrGrData[jj][k][1] - 1][2])
+                    {
+                        data[allSubgrGrData[jj][k][1] - 1][3]= data[allSubgrGrData[jj][k][1] - 1][2];
+                        data[allSubgrGrData[jj][k][1] - 1][2]='';
+                    }
+                    data[allSubgrGrData[jj][k][1] - 1][isinrec - 1]=0;
+                    data[allSubgrGrData[jj][k][1] - 1][tablelenth-1] = grNames[i][1]+" "+ grNames[i][0];
+                    data[allSubgrGrData[jj][k][1] - 1][tablelenth] =allSubgrGrNames[i][j][1]+" "+ allSubgrGrNames[i][j][0];
+           
+                    if (n==-1)
+                        s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" +allSubgrGrData[jj][k][1]+"' >&nbsp;" + allSubgrGrData[jj][k][3]+ ss + "</div></a>";
+                    else
+                    {
+                        s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[n][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
+                    }             
+                }
+                d++;
+            }
+            jj++;
+            s2+="</div>"
+        }
+
+        s2 += "</div>";
+        buff.push(s2);
     }
     s = s + buff.join(''); 
- // }
- doResizeCode()
-  ul.innerHTML="<br>"+s;
-  setmap(-1);
-  
+
+    doResizeCode()
+    ul.innerHTML="<br>"+s;
+    setmap(-1);
 }
 
 function class_tree() {
@@ -502,7 +480,7 @@ function build_tree(codegr, codeupgr) {
             if (grClassify[i][3] == 0)
                 ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
           else
-              ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ")'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");setcolored(\"li" + grClassify[i][0] + "\",\"#abc3e7\");change_image_index(" + grClassify[i][3] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
+                ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ")'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");setcolored(\"li" + grClassify[i][0] + "\",\"#abc3e7\");change_image_index(" + grClassify[i][3] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
 
          ss += "<div id='ul" + grClassify[i][0] + "' style='display:none;margin-left:10px'>";                             
           build_tree(grClassify[i][0],grClassify[i][1])
@@ -510,6 +488,7 @@ function build_tree(codegr, codeupgr) {
        }     
   }       
 }
+
 function isnotElemIn(mas,elem)
 {
   for (var i=0;i<mas.length;i++)  
@@ -1197,7 +1176,7 @@ function showclassify() {
         var uls = document.getElementById("ulclassify");
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
-        if (showcls == 1)
+        if ( showcls == 1 && showcls3 == 1 )
           uls.style.height =  document.body.clientHeight - 160 + "px"; 
         else 
           uls.style.height =h1+h2  +"px";
@@ -1766,8 +1745,6 @@ addEvent(window, "resize", function() {
 });
 
 function doResizeCode() {
-
-
 var tablID = document.getElementById("tablID");
 var imgD = document.getElementById("imgD");
 imgD.style.width = document.body.clientWidth-320+"px";
@@ -1775,10 +1752,13 @@ imgD.style.width = document.body.clientWidth-320+"px";
 if (modify!=180)
     imgD.style.height = document.body.clientHeight - modify - countinrec * 20 - 31  + "px"; //
 else
-imgD.style.height = document.body.clientHeight - modify -81  + "px";
+    imgD.style.height = document.body.clientHeight - modify -81  + "px";
 
 var uls = document.getElementById("uls");
-if (showcls == 0) uls.style.height = document.body.clientHeight - 260 + "px";
+if (showcls == 0) uls.style.height = document.body.clientHeight - 310 + "px";
+var ulcomp = document.getElementById("ulcomp");
+//if (showcls3 == 3 && showcls == 1)
+ulcomp.style.height = 0;// document.body.clientHeight - 310 + "px";
 
 
 var rec = document.getElementById("recucle");
