@@ -245,20 +245,19 @@ function setup(ul) {
 
     ff.innerHTML=ffs;
 
-    var s="";
-    var dd = document.getElementById("recucle");
-    s = s + "<div id='recle' class='fgr'>";
-    s =s+ "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
-    //s =s+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
-    s=s+"<div class='recucle' onClick='openRecucle(1);'>"+trans[14]+"</div>";
+    {
+        // Кнопка "Корзина"
+        var recucle_str="";
+        var recucle_elem = document.getElementById("recucle");
+        recucle_str = recucle_str + "<div id='recle' class='fgr'>";
+        recucle_str =recucle_str+ "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
+        //recucle_str =recucle_str+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
+        recucle_str=recucle_str+"<div class='recucle' onClick='openRecucle(1);'>"+trans[14]+"</div>";
+        recucle_str = recucle_str +"<div class=\"submit\" id='online' onClick=\"online();\">"+ trans[2] +"</div>"; 
+        //recucle_str = recucle_str +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
+        recucle_elem.innerHTML = recucle_str;
+    }
 
-     s = s +"<div class=\"submit\" id='online' onClick=\"online();\">"+ trans[2] +"</div>"; 
-     //s = s +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
-
-
-    dd.innerHTML=s;
-
-    s=""; 
     isinrec=data[0].length+1;
      var table = document.getElementById('tablID');
      var trList = table.getElementsByTagName('tr');
@@ -310,80 +309,125 @@ function setup(ul) {
     if (uaVers.charAt(0)<'9' && uaVers.charAt(1)=='.') {alert('Вы используете устаревшую версию Internet Explorer, необходима версия 9.0 и выше');close();  };
     }
 
- 
-    var d=0;
-    var jj=0;
 
+    //Строим дерево классификаторов
     class_tree();
-    var previmg=-1;
-    var prevpos=-1;
-    var buff = [];
+
+    //Корректируем данные, если вдруг родителя какой-то группы нет среди выгруженных
     for (var i = 0; i < grNames.length; i++)
     {
-        s2 = '';
-        s2 += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  >" + grNames[i][1] + ". " + grNames[i][0] + "</div>"; 
- 
-        s2+= "<div  id='ul"+i+"' style='display:none; margin-left:10px; padding-bottom: 6px'>";
-        for (var j=0;j<allSubgrGrNames[i].length;j++)
-        {
-            var nn=0;
-            if (allSubgrGrData[jj][0][2]=='-1')
-            {
-                allSubgrGrData[jj][0][0]=numbimg(data[allSubgrGrData[jj][0][1] - 1][0]); 
-            }
-            allSubgrGrNames[i][j][1]='';
-            s2 += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
-            s2 += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
-       
-            for (var k=1;k<allSubgrGrData[jj].length;k++)
-            {
-                var n=-1; 
-                for (var m=0;m<grIllustration.length;m++)
-                    if (grIllustration[m][0]==allSubgrGrData[jj][k][1])
-                        n=m;  
-       	        if(allSubgrGrData[jj][k][0]!=0) razn= data[allSubgrGrData[jj][k][1] - 1][0]-allSubgrGrData[jj][k][0];
-                    if (allSubgrGrData[jj][k][2]=='-1')
-                    {
-                        allSubgrGrData[jj][k][0]=numbimg(data[allSubgrGrData[jj][k][1] - 1][0]); 
-                    }
-                {
-                    var ss = "";
-                    data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
+        var clear_parent = true;
 
-                    if (allSubgrGrData[jj][k][5] != 0 && allSubgrGrData[jj][k][3] != data[allSubgrGrData[jj][k][1] - 1][2])
+        for (var j = 0; j < grNames.length; j++)
+            if (grNames[i][3] == grNames[j][2])
+            {
+                clear_parent = false;
+                break;
+            }
+
+        if (clear_parent == true)
+            grNames[i][3] = 0;
+    }
+
+    var buff = []; //Массив строк, содержащих HTML-код дерева функциональных групп
+    funk_group(0, buff);
+
+    doResizeCode()
+    ul.innerHTML = "<br>" + '' + buff.join('');
+    setmap(-1);
+}
+
+
+
+var d = 0;
+var jj = 0;
+var previmg = -1;
+var prevpos = -1;
+
+//Формирует элементы, входящие в группу
+function funk_group(par_gr, buff) 
+{
+    for (var i = 0; i < grNames.length; i++) 
+    {
+        if (grNames[i][3] != par_gr)
+            continue;
+
+        //Выполняется только для групп, для которых par_gr является родителем
+
+        var group_content = ''; // Строка, формирующая подгруппы и элементы подгрупп для данной группы.
+        // !!! note_001_mal !!! 'group_content' формируется без закрывающего тега </div>,
+        // поэтому после завершения формирования строк с дочерними группами в buff необходимо добавить этот самый тег
+
+        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  >" + grNames[i][1] + ". " + grNames[i][0] + "</div>";
+
+        group_content += "<div  id='ul" + i + "' style='display:none; margin-left:10px; padding-bottom: 6px'>";
+
+        //Формируем подгруппы, входящие в группы
+        for (var j = 0; j < allSubgrGrNames[i].length; j++)
+        {
+            var nn = 0;
+            if (allSubgrGrData[jj][0][2] == '-1')
+                allSubgrGrData[jj][0][0] = numbimg(data[allSubgrGrData[jj][0][1] - 1][0]);
+
+            allSubgrGrNames[i][j][1] = '';
+            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
+            group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
+
+            //Формируем элементы, входящие в группы
+            for (var k = 1; k < allSubgrGrData[jj].length; k++)
+            {
+
+                var img_pos = -1; //Позиция изображения для данного элемента
+                for (var m = 0; m < grIllustration.length; m++)
+                    if (grIllustration[m][0] == allSubgrGrData[jj][k][1])
                     {
-                        ss = " " + data[allSubgrGrData[jj][k][1] - 1][2];
+                        img_pos = m;
+                        break;
                     }
-                    if (allSubgrGrData[jj][k][3] == data[allSubgrGrData[jj][k][1] - 1][2])
-                    {
-                        data[allSubgrGrData[jj][k][1] - 1][3]= data[allSubgrGrData[jj][k][1] - 1][2];
-                        data[allSubgrGrData[jj][k][1] - 1][2]='';
-                    }
-                    data[allSubgrGrData[jj][k][1] - 1][isinrec - 1]=0;
-                    data[allSubgrGrData[jj][k][1] - 1][tablelenth-1] = grNames[i][1]+" "+ grNames[i][0];
-                    data[allSubgrGrData[jj][k][1] - 1][tablelenth] =allSubgrGrNames[i][j][1]+" "+ allSubgrGrNames[i][j][0];
-           
-                    if (n==-1)
-                        s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" +allSubgrGrData[jj][k][1]+"' >&nbsp;" + allSubgrGrData[jj][k][3]+ ss + "</div></a>";
-                    else
-                    {
-                        s2 = s2 + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[n][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
-                    }             
+
+                //Какая-то магия
+                //Начало магии
+                if (allSubgrGrData[jj][k][0] != 0)
+                    razn = data[allSubgrGrData[jj][k][1] - 1][0] - allSubgrGrData[jj][k][0];
+
+                if (allSubgrGrData[jj][k][2] == '-1')
+                    allSubgrGrData[jj][k][0] = numbimg(data[allSubgrGrData[jj][k][1] - 1][0]);
+
+                var ss = "";
+                data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
+
+                if (allSubgrGrData[jj][k][5] != 0 && allSubgrGrData[jj][k][3] != data[allSubgrGrData[jj][k][1] - 1][2])
+                    ss = " " + data[allSubgrGrData[jj][k][1] - 1][2];
+
+                if (allSubgrGrData[jj][k][3] == data[allSubgrGrData[jj][k][1] - 1][2])
+                {
+                    data[allSubgrGrData[jj][k][1] - 1][3] = data[allSubgrGrData[jj][k][1] - 1][2];
+                    data[allSubgrGrData[jj][k][1] - 1][2] = '';
                 }
+
+                data[allSubgrGrData[jj][k][1] - 1][isinrec - 1] = 0;
+                data[allSubgrGrData[jj][k][1] - 1][tablelenth - 1] = grNames[i][1] + " " + grNames[i][0];
+                data[allSubgrGrData[jj][k][1] - 1][tablelenth] = allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0];
+                //Конец магии
+
+                if (img_pos == -1)
+                    group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" + allSubgrGrData[jj][k][1] + "' >&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a>";
+                else
+                    group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
+
                 d++;
             }
             jj++;
-            s2+="</div>"
+            group_content += "</div>"
         }
 
-        s2 += "</div>";
-        buff.push(s2);
-    }
-    s = s + buff.join(''); 
+        buff.push(group_content);
 
-    doResizeCode()
-    ul.innerHTML="<br>"+s;
-    setmap(-1);
+        //Формируем дочерние группы для данной
+        funk_group(grNames[i][2], buff);
+
+        buff.push("</div>"); // См. note_001_mal
+    }
 }
 
 function class_tree() {
