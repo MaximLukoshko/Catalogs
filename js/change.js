@@ -358,7 +358,7 @@ function funk_group(par_gr, buff)
         // !!! note_001_mal !!! 'group_content' формируется без закрывающего тега </div>,
         // поэтому после завершения формирования строк с дочерними группами в buff необходимо добавить этот самый тег
 
-        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  >" + grNames[i][1] + ". " + grNames[i][0] + "</div>";
+        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  ><font size=\"2\" color=\"navy\">" + grNames[i][1] + ". " + grNames[i][0] + "</font></div>";
 
         group_content += "<div  id='ul" + i + "' style='display:none; margin-left:10px; padding-bottom: 6px'>";
 
