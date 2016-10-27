@@ -332,7 +332,7 @@ function funk_group(par_gr, buff) {
             group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
             //Формируем элементы, входящие в группы
-            for (var k = 1; k < allSubgrGrData[jj].length; k++) {
+            for (var k = 0; k < allSubgrGrData[jj].length; k++) {
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
                 for (var m = 0; m < grIllustration.length; m++)
@@ -456,20 +456,23 @@ function class_tree() {
 
 var m_composition = 2000000;
 function tree_composition(par_gr, buff) {
+    var arr = [];
     for (var i = 0; i < allSubgrGrData.length; i++) {
-        for (var j = 1; j < allSubgrGrData[i].length; j++) {
+        for (var j = 0; j < allSubgrGrData[i].length; j++) {
             var name = "";
             if (data[allSubgrGrData[i][j][1] - 1][2] != "")
                 name = data[allSubgrGrData[i][j][1] - 1][2];
             else
                 name = allSubgrGrData[i][j][3];
-            if (par_gr == data[allSubgrGrData[i][j][1] - 1][12]) {
+            if (par_gr == data[allSubgrGrData[i][j][1] - 1][12] && isnotElemIn(arr, name)) {
                 m_composition++;
                 var source = "";
+
                 source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
+                arr.push(name);
                 for (var ii = 0; ii < allSubgrGrData.length; ii++)
                 {
-                    for (var jj = 1; jj < allSubgrGrData[ii].length; jj++)
+                    for (var jj = 0; jj < allSubgrGrData[ii].length; jj++)
                     {
                         var name_temp = "";
 
@@ -480,13 +483,8 @@ function tree_composition(par_gr, buff) {
 
                         if (name == name_temp)
                         {
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1];
-                            source+= "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0];
-                            source+=");scrollIV(" + allSubgrGrData[ii][jj][1];
-                            source+=",\"ulcomp\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + allSubgrGrData[ii][jj][4];
-                            source+= "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0];
-                            source+=", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
-                            break;
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");scrollIV(" + allSubgrGrData[ii][jj][1] + ",\"ulcomp\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
+//                            break;
                         }
                         
                     }
