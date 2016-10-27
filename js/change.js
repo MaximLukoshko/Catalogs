@@ -1671,22 +1671,10 @@ function doResizeCode() {
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
         var ulsc = document.getElementById("ulclassify");
-        var show_cls = showcls || showcls3;
-        if (show_cls == 0)
+        var show_cls = showcls==1 && showcls3==1;
+        if (show_cls == 1)
             ulsc.style.height = document.body.clientHeight - 160 + "px";
         else
             ulsc.style.height = h1 + h2 + "px";
     }
-
-    /*
-    if(showcls==0)
-    {
-        var uls = document.getElementById("uls");
-        uls.style.height = 0;
-    }
-    else
-    {
-        var ulcomp = document.getElementById("ulcomp");
-        ulcomp.style.height = 0;
-    }*/
 }
