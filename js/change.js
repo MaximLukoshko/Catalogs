@@ -277,13 +277,12 @@ function setup(ul) {
     var buff = [];
     //Массив строк, содержащих HTML-код дерева функциональных групп
     funk_group(0, buff);
-    doResizeCode()
-    //    ul.innerHTML = "<br>" + '' + buff.join('');
-    /* buff = [];
-    for (var i = 0; i < data.length() ; i++)
+    ul.innerHTML = "<br>" + '' + buff.join('');
+    buff = [];
+    for (var i = 0; i < data.length ; i++)
     {
         var clear=true;
-        for (var j = 0; j < data.length() ; j++)
+        for (var j = 0; j < data.length ; j++)
         {
             if(data[i][12]==data[j][11])
             {
@@ -296,12 +295,13 @@ function setup(ul) {
     }
 
     tree_composition(0, buff);
-    */
+    
     var ulcomp_field = document.getElementById("ulcomp");
-    /*if (ulcomp_field.innerHTML == "undefined")
-        ulcomp_field.innerHTML = "";*/
-    ul.innerHTML = "<br>" + '' + buff.join('');
+    if (ulcomp_field.innerHTML == "undefined")
+        ulcomp_field.innerHTML = "";
+    ulcomp_field.innerHTML = "<br>" + '' + buff.join('');
     setmap(-1);
+    doResizeCode()
 }
 var d = 0;
 var jj = 0;
@@ -450,17 +450,17 @@ function class_tree() {
 }
 function tree_composition(par_gr, buff) {
     var source = "";
+    var m = 2000000;
     for (var i = 0; i < allSubgrGrData.length; i++) {
-        for (var j = 1; j < allSubgrGrData[j].length; j++) {
+        for (var j = 1; j < allSubgrGrData[i].length; j++) {
             var name = "";
             if (data[allSubgrGrData[i][j][1] - 1][2] != "")
                 name = data[allSubgrGrData[i][j][1] - 1][2];
             else
                 name = allSubgrGrData[i][j][3];
-            if (par_gr == allSubgrGrData[i][j][12]) {
-                var m = allSubgrGrData[i][j][7] + 2000000;
-                if (m < 2000000)
-                    continue; source += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
+            if (par_gr == data[allSubgrGrData[i][j][1] - 1][12]) {
+                m++;
+                source += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
                 /*for (var ii = 0; ii < allSubgrGrData.length; i++)
                 {
                     for (var jj = 1; jj < allSubgrGrData[j].length; j++)
@@ -481,7 +481,7 @@ function tree_composition(par_gr, buff) {
                     }
                 }*/
                 buff.push(source);
-                tree_composition(data[allSubgrGrData[i][j][1] - 1][12], buff);
+                tree_composition(data[allSubgrGrData[i][j][1] - 1][11], buff);
                 buff.push("</div>");
             }
         }
