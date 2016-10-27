@@ -26,7 +26,7 @@ var curpos = 0;
 var v = 1;
 var showcls = 0;
 var showcls2 = 0;
-var showcls3 = 1;
+var showcls3 = 0;
 var tablelenth = 0;
 var countinrec = 0;
 var previd = "";
@@ -301,6 +301,11 @@ function setup(ul) {
         ulcomp_field.innerHTML = "";
     ulcomp_field.innerHTML = "<br>" + '' + buff.join('');
     setmap(-1);
+
+    showcomposition();
+    showclassify();
+    showclass();
+
     doResizeCode()
 }
 var d = 0;
@@ -448,9 +453,10 @@ function class_tree() {
             }
     }
 }
+
+var m_composition = 2000000;
 function tree_composition(par_gr, buff) {
     var source = "";
-    var m = 2000000;
     for (var i = 0; i < allSubgrGrData.length; i++) {
         for (var j = 1; j < allSubgrGrData[i].length; j++) {
             var name = "";
@@ -459,8 +465,8 @@ function tree_composition(par_gr, buff) {
             else
                 name = allSubgrGrData[i][j][3];
             if (par_gr == data[allSubgrGrData[i][j][1] - 1][12]) {
-                m++;
-                source += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
+                m_composition++;
+                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
                 /*for (var ii = 0; ii < allSubgrGrData.length; i++)
                 {
                     for (var jj = 1; jj < allSubgrGrData[j].length; j++)
@@ -1578,13 +1584,7 @@ function doResizeCode() {
         //
     else
         imgD.style.height = document.body.clientHeight - modify - 81 + "px";
-    var uls = document.getElementById("uls");
-    if (showcls == 0)
-        uls.style.height = document.body.clientHeight - 310 + "px";
-    var ulcomp = document.getElementById("ulcomp");
-    //if (showcls3 == 3 && showcls == 1)
-    ulcomp.style.height = 0;
-    // document.body.clientHeight - 310 + "px";
+    
     var rec = document.getElementById("recucle");
     if (modify != 180)
         rec.style.height = countinrec * 30 + 100 + "px";
@@ -1650,13 +1650,38 @@ function doResizeCode() {
         bt.style.width = "80px";
         bt.style.height = "22px";
     }
-    var gr = document.getElementById("group");
-    var t = document.getElementById("tablID");
-    var h1 = gr.offsetHeight;
-    var h2 = t.offsetHeight;
-    var ulsc = document.getElementById("ulclassify");
+
+    var uls = document.getElementById("uls");
+    var ulcomp = document.getElementById("ulcomp");
+
+    if (showcls == 0 && showcls3 == 1)
+        uls.style.height = document.body.clientHeight - 310 + "px";
+    else if (showcls3 == 0 && showcls == 1)
+        ulcomp.style.height = document.body.clientHeight - 310 + "px";
+
     if (showcls2 == 0)
-        ulsc.style.height = h1 + h2 + "px";
-    if (showcls2 == 0 && showcls == 1)
-        ulsc.style.height = document.body.clientHeight - 160 + "px";
+    {
+        var gr = document.getElementById("group");
+        var t = document.getElementById("tablID");
+        var h1 = gr.offsetHeight;
+        var h2 = t.offsetHeight;
+        var ulsc = document.getElementById("ulclassify");
+        var show_cls = showcls || showcls3;
+        if (show_cls == 0)
+            ulsc.style.height = document.body.clientHeight - 160 + "px";
+        else
+            ulsc.style.height = h1 + h2 + "px";
+    }
+
+    /*
+    if(showcls==0)
+    {
+        var uls = document.getElementById("uls");
+        uls.style.height = 0;
+    }
+    else
+    {
+        var ulcomp = document.getElementById("ulcomp");
+        ulcomp.style.height = 0;
+    }*/
 }
