@@ -484,7 +484,7 @@ function tree_composition(par_gr, buff) {
 
                         if (name == name_temp)
                         {
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
                             break;
                         }
                         
