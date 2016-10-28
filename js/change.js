@@ -1264,7 +1264,7 @@ function change(current, area_index, img_index, p, pp) {
             var h = 0;
             for (var q = 0; q < grNames.length; q++)
                 for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
-                    h = h + allSubgrGrData[t].length - 1;
+                    h = h + allSubgrGrData[t].length;
                     if (h > current - 1) {
                         setOpen(q + "," + q1);
                         setOpen(q);
