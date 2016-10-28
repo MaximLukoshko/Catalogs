@@ -439,7 +439,8 @@ function class_tree() {
                             if (v) {
                                 if (data[kk][1] == "")
                                     allSubgrGrData[jj][k][0] = numbimg(data[kk][0]);
-                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");scrollIV(" + allSubgrGrData[jj][k][1] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[kk][0] + ", " + trans[13] + " " + data[kk][1] + "</div></a>";
+                                var tr_comp_id = allSubgrGrData[jj][k][1] + 2000000;
+                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + allSubgrGrData[jj][k][1] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[kk][0] + ", " + trans[13] + " " + data[kk][1] + "</div></a>";
                                 allSubgrGrData[jj][k][6] = allSubgrGrData[jj][k][4];
                                 allSubgrGrData[jj][k][7] = m;
                                 allSubgrGrData[jj][k][4] = bol;
@@ -454,7 +455,7 @@ function class_tree() {
     }
 }
 
-var m_composition = 2000000;
+var m_composition = 0;
 function tree_composition(par_gr, buff) {
     var arr = [];
     for (var i = 0; i < allSubgrGrData.length; i++) {
@@ -465,7 +466,7 @@ function tree_composition(par_gr, buff) {
             else
                 name = allSubgrGrData[i][j][3];
             if (par_gr == data[allSubgrGrData[i][j][1] - 1][12] && isnotElemIn(arr, name)) {
-                m_composition++;
+                m_composition = allSubgrGrData[i][j][1] + 2000000;
                 var source = "";
 
                 source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
@@ -483,8 +484,8 @@ function tree_composition(par_gr, buff) {
 
                         if (name == name_temp)
                         {
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");scrollIV(" + allSubgrGrData[ii][jj][1] + ",\"ulcomp\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
-//                            break;
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
+                            break;
                         }
                         
                     }
@@ -1034,6 +1035,9 @@ function setcolored(current, color) {
             selarr[selindex] = k;
             selindex++;
             var kk = document.getElementById(k);
+            kk.style.background = color;
+            var t =k + 2000000;
+            kk = document.getElementById("li" + t);
             kk.style.background = color;
         }
         //else selarr[selindex] = -1;
