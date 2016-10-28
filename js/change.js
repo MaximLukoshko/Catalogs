@@ -281,20 +281,20 @@ function setup(ul) {
     buff = [];
     for (var i = 0; i < data.length ; i++)
     {
-        var clear=true;
+        var index = -1;
         for (var j = 0; j < data.length ; j++)
         {
             if(data[i][12]==data[j][11])
             {
-                clear = false;
+                index = j;
                 break;
             }
         }
-        if (clear)
-            data[i][12] = 0;
+        
+        data[i][12] = index;
     }
 
-    tree_composition(0, buff);
+    tree_composition(-1, buff);
     
     var ulcomp_field = document.getElementById("ulcomp");
     if (ulcomp_field.innerHTML == "undefined")
@@ -491,7 +491,9 @@ function tree_composition(par_gr, buff) {
                     }
                 }
                 buff.push(source);
-                tree_composition(data[allSubgrGrData[i][j][1] - 1][11], buff);
+                //tree_composition(data[allSubgrGrData[i][j][1] - 1][11], buff);
+                var pos = allSubgrGrData[i][j][1] - 1;
+                tree_composition(pos, buff);
                 buff.push("</div>");
             }
         }
@@ -1046,6 +1048,11 @@ function setcolored(current, color) {
     while (t < selarr.length) {
         if (selarr[t] != prevselarr[t]) {
             var s = document.getElementById(prevselarr[t]);
+            if (s != null)
+                s.style.background = "#ffffff";
+
+            var k = prevselarr[t] + 2000000;
+            s = document.getElementById("li" + k);
             if (s != null)
                 s.style.background = "#ffffff";
         }
