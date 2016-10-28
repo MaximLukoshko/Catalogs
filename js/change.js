@@ -1038,7 +1038,7 @@ function setcolored(current, color) {
             selindex++;
             var kk = document.getElementById(k);
             kk.style.background = color;
-            var t =k + 2000000;
+            var t = k + 2000000;
             kk = document.getElementById("li" + t);
             kk.style.background = color;
         }
@@ -1290,6 +1290,7 @@ function change(current, area_index, img_index, p, pp) {
                             tree_item_opened = false;
                             boxVisible(-1, -1, true, true);
                         }
+                        openItemTree(current - 1);
                         doResizeCode();
                         return;
                     }
@@ -1313,6 +1314,14 @@ function setOpen(q) {
     if (ul != null)
         ul.style.display = 'block';
 }
+function openItemTree(ind) {
+    if (ind < 0 || ind >= data.length)
+        return;
+    var id = ind + 2000000 + 1;
+    setOpen(id);
+    openItemTree(data[ind][12]);
+}
+
 function boxVisible(imageNum, num, visible, force) {
     force = true;
     for (var k = 0; k < 10; ++k)
