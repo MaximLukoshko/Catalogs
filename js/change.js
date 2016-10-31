@@ -6,6 +6,7 @@ var curfind = 0;
 var cur = 1;
 var prev = -1;
 var prev1 = -1;
+var prev2 = -1;
 var sel_item = false;
 var prevfind = "";
 var gr;
@@ -484,7 +485,8 @@ function tree_composition(par_gr, buff) {
 
                         if (name == name_temp)
                         {
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + allSubgrGrData[ii][jj][4] + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
+                            var tc_ind = allSubgrGrData[ii][jj][1] + 2000000;
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
                             break;
                         }
                         
@@ -993,8 +995,9 @@ function findIt(findtype) {
 function scrollIV(id, ps) {
     var element = document.getElementById(id);
     var parentEl = document.getElementById(ps);
-    if ((element.offsetTop < parentEl.scrollTop) || (element.offsetTop > (parentEl.scrollTop + parentEl.offsetHeight)))
-        parentEl.scrollTop = element.offsetTop - 20;
+    if (element && parentEl)
+        if ((element.offsetTop < parentEl.scrollTop) || (element.offsetTop > (parentEl.scrollTop + parentEl.offsetHeight)))
+            parentEl.scrollTop = element.offsetTop - 20;
     //element.scrollIntoView(false);
 }
 function scaleIt(v, width, height) {
@@ -1038,9 +1041,9 @@ function setcolored(current, color) {
             selindex++;
             var kk = document.getElementById(k);
             kk.style.background = color;
-            var t = k + 2000000;
-//            kk = document.getElementById("li" + t);
-//            kk.style.background = color;
+//          var t = k + 2000000;
+//          kk = document.getElementById("li" + t);
+//          kk.style.background = color;
         }
         //else selarr[selindex] = -1;
     }
@@ -1051,10 +1054,10 @@ function setcolored(current, color) {
             if (s != null)
                 s.style.background = "#ffffff";
 
-            var k = prevselarr[t] + 2000000;
-            s = document.getElementById("li" + k);
-            if (s != null)
-                s.style.background = "#ffffff";
+//          var k = prevselarr[t] + 2000000;
+//          s = document.getElementById("li" + k);
+//          if (s != null)
+//              s.style.background = "#ffffff";
         }
         t++;
     }
@@ -1074,13 +1077,28 @@ function setcolored(current, color) {
 }
 function setcolored1(current) {
     var k = document.getElementById(current);
-    k.style.background = "#aac3e7";
     if (prev1 != -1 && prev1 != current) {
         var s = document.getElementById(prev1);
         s.style.background = "#ffffff";
     }
-    prev1 = current;
+
+    if (k)
+    {
+        k.style.background = "#aac3e7";
+        prev1 = current;
+    }
 }
+
+function setcolored2(current) {
+    var k = document.getElementById(current);
+    k.style.background = "#aac3e7";
+    if (prev2 != -1 && prev2 != current) {
+        var s = document.getElementById(prev2);
+        s.style.background = "#ffffff";
+    }
+    prev2 = current;
+}
+
 function getImageSrc(prefix, flag) {
     if (flag)
         return prefix + "./img/minus.gif";
@@ -1279,9 +1297,19 @@ function change(current, area_index, img_index, p, pp) {
                             setcolored1('b' + c);
                             open_tree(c, cl);
                             scrollIV('b' + c, "ulclassify");
+                            openItemTree(current - 1);
+                            current += 2000000;
+                            setcolored2('tc' + current);
+                            scrollIV('tc' + current, "ulcomp");
+                            current -= 2000000;
                         } else {
                             if (prev1 != -1) {
                                 var s = document.getElementById(prev1);
+                                if (s != undefined)
+                                    s.style.background = "#ffffff";
+                            }
+                            if (prev2 != -1) {
+                                var s = document.getElementById(prev2);
                                 if (s != undefined)
                                     s.style.background = "#ffffff";
                             }
@@ -1290,8 +1318,6 @@ function change(current, area_index, img_index, p, pp) {
                             tree_item_opened = false;
                             boxVisible(-1, -1, true, true);
                         }
-                        openItemTree(current - 1);
-                        setcolored1('tc' + c);
                         doResizeCode();
                         return;
                     }
@@ -1405,6 +1431,9 @@ function clear_sel() {
     if (k != undefined)
         k.style.background = "#ffffff";
     k = document.getElementById(prev1);
+    if (k != undefined)
+        k.style.background = "#ffffff";
+    k = document.getElementById(prev2);
     if (k != undefined)
         k.style.background = "#ffffff";
 }
