@@ -909,7 +909,7 @@ function findIt(findtype) {
     var t = 0;
     var prevh = 0;
     var countDet = 0;
-    findv = document.getElementById('typef').value;
+    var findv = document.getElementById('typef').value;
     if (v == 1) {
         if (curfind < colbolts)
             countDet = curfind + 1;
@@ -930,13 +930,13 @@ function findIt(findtype) {
                 var h = 0;
                 for (var q = 0; q < grNames.length; q++)
                     for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
-                        h = h + allSubgrGrData[t].length - 1;
+                        h = h + allSubgrGrData[t].length;
                         if (h > countDet) {
                             if (findtype == true && allSubgrGrData[t][countDet - prevh + 1][4] == 0) {
                                 q = grNames.length;
                                 break;
                             }
-                            change(allSubgrGrData[t][countDet - prevh + 1][1], allSubgrGrData[t][countDet - prevh + 1][2], allSubgrGrData[t][countDet - prevh + 1][0]);
+                            change(allSubgrGrData[t][countDet - prevh][1], allSubgrGrData[t][countDet - prevh][2], allSubgrGrData[t][countDet - prevh][0]);
                             scrollIV(countDet + 1, "uls");
                             curfind = countDet;
                             isfind = true;
@@ -1663,11 +1663,15 @@ function doResizeCode() {
     sf.style.height = "18px";
     var typef = document.getElementById("btnc");
     typef.style.position = "absolute";
-    typef.style.left = "189px";
+    typef.style.left = "219px";
     typef.style.top = "32px";
     var typef = document.getElementById("btnf");
     typef.style.position = "absolute";
-    typef.style.left = "7px";
+    typef.style.left = "4px";
+    typef.style.top = "32px";
+    var typef = document.getElementById("btnclsf");
+    typef.style.position = "absolute";
+    typef.style.left = "98px";
     typef.style.top = "32px";
     var imgA = document.getElementById("imageAreaDiv");
     var leftcol = document.getElementById("leftcol");
