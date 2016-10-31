@@ -995,8 +995,9 @@ function findIt(findtype) {
 function scrollIV(id, ps) {
     var element = document.getElementById(id);
     var parentEl = document.getElementById(ps);
-    if ((element.offsetTop < parentEl.scrollTop) || (element.offsetTop > (parentEl.scrollTop + parentEl.offsetHeight)))
-        parentEl.scrollTop = element.offsetTop - 20;
+    if (element && parentEl)
+        if ((element.offsetTop < parentEl.scrollTop) || (element.offsetTop > (parentEl.scrollTop + parentEl.offsetHeight)))
+            parentEl.scrollTop = element.offsetTop - 20;
     //element.scrollIntoView(false);
 }
 function scaleIt(v, width, height) {
@@ -1076,12 +1077,16 @@ function setcolored(current, color) {
 }
 function setcolored1(current) {
     var k = document.getElementById(current);
-    k.style.background = "#aac3e7";
     if (prev1 != -1 && prev1 != current) {
         var s = document.getElementById(prev1);
         s.style.background = "#ffffff";
     }
-    prev1 = current;
+
+    if (k)
+    {
+        k.style.background = "#aac3e7";
+        prev1 = current;
+    }
 }
 
 function setcolored2(current) {
