@@ -404,7 +404,7 @@ function class_tree() {
         if (v.innerHTML == "undefined")
             v.innerHTML = "";
         for (var jj = 0; jj < allSubgrGrData.length; jj++)
-            for (var k = 1; k < allSubgrGrData[jj].length; k++) {
+            for (var k = 0; k < allSubgrGrData[jj].length; k++) {
                 if (grClassify[n][0] == allSubgrGrData[jj][k][4]) //if (allSubgrGrData[jj][k][4]==bol)
                 {
                     var s;
@@ -426,7 +426,7 @@ function class_tree() {
     for (var n = 0; n < grClassify.length; n++) {
         var kk = 0;
         for (var jj = 0; jj < allSubgrGrData.length; jj++)
-            for (var k = 1; k < allSubgrGrData[jj].length; k++) {
+            for (var k = 0; k < allSubgrGrData[jj].length; k++) {
                 if (grClassify[n][0] == allSubgrGrData[jj][k][4]) {
                     for (var d = 0; d < mas.length; d++) {
                         var s;
