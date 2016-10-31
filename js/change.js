@@ -1039,8 +1039,8 @@ function setcolored(current, color) {
             var kk = document.getElementById(k);
             kk.style.background = color;
             var t = k + 2000000;
-            kk = document.getElementById("li" + t);
-            kk.style.background = color;
+//            kk = document.getElementById("li" + t);
+//            kk.style.background = color;
         }
         //else selarr[selindex] = -1;
     }
@@ -1291,6 +1291,7 @@ function change(current, area_index, img_index, p, pp) {
                             boxVisible(-1, -1, true, true);
                         }
                         openItemTree(current - 1);
+                        setcolored1('tc' + c);
                         doResizeCode();
                         return;
                     }
