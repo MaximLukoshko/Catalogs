@@ -2,7 +2,6 @@ var prev_image = 0;
 var oldv = 1;
 var myWin;
 var jst;
-var curfind = -1;
 var cur = 1;
 var prev = -1;
 var prev1 = -1;
@@ -33,6 +32,9 @@ var countinrec = 0;
 var previd = "";
 var findsize = 100;
 
+//Переменные для поиска
+var curfind = -1;
+var find_direction = 1;
 var order_funcgroups = [];
 var order_composition = [];
 var order_classify = [];
@@ -40,7 +42,7 @@ var order_classify = [];
 function online() { }
 function changetypef(f) {
     //findtype = f;
-    v = f;
+    find_direction = f;
 }
 function isgetdetal(j) {
     for (var i = 0; i < allSubgrGrData[j].length; i++) {
@@ -1018,7 +1020,6 @@ function findIt(findtype)
         find_by_name(order_classify);
 }
 
-var find_direction = 1;
 function find_by_name(find_array)
 {
     var findv = document.getElementById('typef').value;
