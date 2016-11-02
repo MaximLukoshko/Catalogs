@@ -1022,7 +1022,7 @@ var find_direction = 1;
 function find_by_name(find_array)
 {
     var findv = document.getElementById('typef').value;
-    var start_index = 0;
+    var start_index = -1;
 
     
     for (var i = 0; i < find_array.length;i++)
@@ -1031,7 +1031,6 @@ function find_by_name(find_array)
             start_index = i;
             break;
         }
-
 
     var cur_index = start_index + find_direction;
     while (cur_index !=start_index)
