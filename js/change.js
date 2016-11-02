@@ -2,7 +2,7 @@ var prev_image = 0;
 var oldv = 1;
 var myWin;
 var jst;
-var curfind = 0;
+var curfind = -1;
 var cur = 1;
 var prev = -1;
 var prev1 = -1;
@@ -32,6 +32,11 @@ var tablelenth = 0;
 var countinrec = 0;
 var previd = "";
 var findsize = 100;
+
+var order_funcgroups = [];
+var order_composition = [];
+var order_classify = [];
+
 function online() { }
 function changetypef(f) {
     //findtype = f;
@@ -363,6 +368,8 @@ function funk_group(par_gr, buff) {
                     group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" + allSubgrGrData[jj][k][1] + "' >&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a>";
                 else
                     group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
+                var displaying_name = allSubgrGrData[jj][k][3] + ss;
+                order_funcgroups.push([allSubgrGrData[jj][k][1] - 1, jj, k, displaying_name]);
                 d++;
             }
             jj++;
@@ -414,7 +421,8 @@ function class_tree() {
                         s = allSubgrGrData[jj][k][3];
                     if (v && isnotElemIn(mas, s)) {
                         var m = p + 1000000;
-                        v.innerHTML += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
+                        var displaying_name = allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2];
+                        v.innerHTML += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
                         mas[p] = s;
                         //allSubgrGrData[jj][k][3];
                         p++;
@@ -441,6 +449,8 @@ function class_tree() {
                                 if (data[kk][1] == "")
                                     allSubgrGrData[jj][k][0] = numbimg(data[kk][0]);
                                 var tr_comp_id = allSubgrGrData[jj][k][1] + 2000000;
+                                var displaying_name = allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2];
+                                order_classify.push([allSubgrGrData[jj][k][1] - 1, jj, k, displaying_name]);
                                 v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + allSubgrGrData[jj][k][1] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[kk][0] + ", " + trans[13] + " " + data[kk][1] + "</div></a>";
                                 allSubgrGrData[jj][k][6] = allSubgrGrData[jj][k][4];
                                 allSubgrGrData[jj][k][7] = m;
@@ -470,7 +480,8 @@ function tree_composition(par_gr, buff) {
                 m_composition = allSubgrGrData[i][j][1] + 2000000;
                 var source = "";
 
-                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2] + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
+                var displaying_name = allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2];
+                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
                 arr.push(name);
                 for (var ii = 0; ii < allSubgrGrData.length; ii++)
                 {
@@ -486,6 +497,7 @@ function tree_composition(par_gr, buff) {
                         if (name == name_temp)
                         {
                             var tc_ind = allSubgrGrData[ii][jj][1] + 2000000;
+                            order_composition.push([allSubgrGrData[ii][jj][1] - 1, ii, jj, displaying_name]);
                             source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
                             break;
                         }
@@ -905,7 +917,8 @@ function changeDisplay(id) {
     divm.innerHTML = alls;
     doResizeCode();
 }
-function findIt(findtype) {
+
+/*function findIt(findtype) {
     var t = 0;
     var prevh = 0;
     var countDet = 0;
@@ -991,7 +1004,69 @@ function findIt(findtype) {
             findIt(findtype);
         }
     }
+}*/
+
+function findIt(findtype)
+{
+    if(findtype==0)
+        find_by_name(order_funcgroups);
+
+    if(findtype==1)
+        find_by_name(order_composition);
+
+    if(findtype==2)
+        find_by_name(order_classify);
 }
+
+var find_direction = 1;
+function find_by_name(find_array)
+{
+    var findv = document.getElementById('typef').value;
+    var start_index = 0;
+
+    
+    for (var i = 0; i < find_array.length;i++)
+        if (find_array[i][0] == curfind)
+        {
+            start_index = i;
+            break;
+        }
+
+
+    var cur_index = start_index + find_direction;
+    while (cur_index !=start_index)
+    {
+        if (cur_index < 0)
+        {
+            cur_index = find_array.length - 1;
+            continue;
+        }
+
+        if (cur_index >= find_array.length)
+        {
+            cur_index = 0;
+            continue;
+        }
+
+        var dat_ind=find_array[cur_index][0];
+        var s = find_array[cur_index][3];
+        s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
+        if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1)
+        {
+            var asgd_i=find_array[cur_index][1];
+            var asgd_j=find_array[cur_index][2];
+            change(allSubgrGrData[asgd_i][asgd_j][1], allSubgrGrData[asgd_i][asgd_j][2], allSubgrGrData[asgd_i][asgd_j][0]);
+            curfind = dat_ind;
+            return;
+        }
+
+        cur_index += find_direction;
+    }
+
+    curfind = -1;
+//    change(-1, -1, -1);
+}
+
 function scrollIV(id, ps) {
     var element = document.getElementById(id);
     var parentEl = document.getElementById(ps);
@@ -1041,9 +1116,9 @@ function setcolored(current, color) {
             selindex++;
             var kk = document.getElementById(k);
             kk.style.background = color;
-//          var t = k + 2000000;
-//          kk = document.getElementById("li" + t);
-//          kk.style.background = color;
+            //          var t = k + 2000000;
+            //          kk = document.getElementById("li" + t);
+            //          kk.style.background = color;
         }
         //else selarr[selindex] = -1;
     }
@@ -1054,10 +1129,10 @@ function setcolored(current, color) {
             if (s != null)
                 s.style.background = "#ffffff";
 
-//          var k = prevselarr[t] + 2000000;
-//          s = document.getElementById("li" + k);
-//          if (s != null)
-//              s.style.background = "#ffffff";
+            //          var k = prevselarr[t] + 2000000;
+            //          s = document.getElementById("li" + k);
+            //          if (s != null)
+            //              s.style.background = "#ffffff";
         }
         t++;
     }
@@ -1069,9 +1144,9 @@ function setcolored(current, color) {
     }
     /*if (prev!=-1 && prev!=current)
         {
-           var s = document.getElementById(prev);     
-           if (s!=null) s.style.background = "#ffffff";
-           
+            var s = document.getElementById(prev);     
+            if (s!=null) s.style.background = "#ffffff";
+               
         } */
     //  prev=current; 
 }
@@ -1218,17 +1293,17 @@ function change(current, area_index, img_index, p, pp) {
             var trList = table.getElementsByTagName('tr');
             var tdListName = trList[0].getElementsByTagName('td');
             var gr = 0
-              , pgr = 0;
+                , pgr = 0;
             var group = document.getElementById('group');
             // var kk = allSubgrGrData[i][0][1];
             group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[cur][tablelenth - 1] + " / " + data[cur][tablelenth] + "</div>";
             //<img src=\"./img/recucle.jpg\" onclick=\"setCheck();\" id=\"check\">";
             /* for (j = 0; j < tablelenth - 2; j++) {
-       if (tdListName[j].innerText == trans[0])
-           gr = j;
-       if (tdListName[j].innerText == trans[1] )
-           pgr = j;
-   }*/
+        if (tdListName[j].innerText == trans[0])
+            gr = j;
+        if (tdListName[j].innerText == trans[1] )
+            pgr = j;
+    }*/
             var s = "";
             var a = current - findsize;
             if (a <= 1)
@@ -1400,7 +1475,7 @@ function boxVisible(imageNum, num, visible, force) {
             }
             /*box = document.getElementById("div" + 4 + "" + k);
 if (box != null) {
-
+    
     box.style.marginLeft = c[0]+2 + "px";
     box.style.marginTop = c[1]+2 + "px";
     box.style.width = c[2]-c[0] + "px";
@@ -1413,8 +1488,8 @@ if (box != null) {
         if (!tree_item_opened)
             box.style.display = "none";
     }
-    
- } */
+        
+    } */
             k++;
         }
         s++;
@@ -1528,18 +1603,18 @@ function OpenImagePopup(imgPath, title, alt, name) {
     content += '</script></body></html>';
     win.document.write(content);
     /*winDoc.body.onload = function() {
-    	var obj = winDoc.getElementById('image');
-    	var w = obj.width, h = obj.height;
-    	var iHeight= document.body.clientHeight, iWidth = self.innerWidth;
- 
-    	var left = (self.opera ? iWidth : screen.availWidth)/2 - w/2;
-    	var top =  (self.opera ? iHeight : screen.availHeight)/2 - h/2;
-    	win.resizeTo(w+16, h+46);
-    	win.moveTo(left, top);
+        var obj = winDoc.getElementById('image');
+        var w = obj.width, h = obj.height;
+        var iHeight= document.body.clientHeight, iWidth = self.innerWidth;
+     
+        var left = (self.opera ? iWidth : screen.availWidth)/2 - w/2;
+        var top =  (self.opera ? iHeight : screen.availHeight)/2 - h/2;
+        win.resizeTo(w+16, h+46);
+        win.moveTo(left, top);
     }
- 
+     
     win.onload = winDoc.body.onload; // special for Mozilla
- */
+    */
     win.document.close();
     win.focus();
 }
