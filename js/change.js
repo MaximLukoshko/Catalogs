@@ -1027,7 +1027,7 @@ function find_by_name(find_array)
 
     
     for (var i = 0; i < find_array.length;i++)
-        if (find_array[i][0] == curfind)
+        if (find_array[i][0] == cur)
         {
             start_index = i;
             break;
