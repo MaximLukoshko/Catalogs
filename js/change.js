@@ -645,15 +645,15 @@ function setCheck() {
         var min = dettorec[0];
         var val = 0;
         while (dettorec[l] != -1) {
-            var cc = document.getElementById("count" + dettorec[l]);
-            if (cc.value != 0) {
-                data[dettorec[l]][isinrec - 2] = '1';
-                data[dettorec[l]][isinrec - 1] = cc.value;
+            var cc = document.getElementById("count" + detsort[l]);
+            if (cc != null && cc.value != 0) {
+                data[detsort[l]][isinrec - 2] = '1';
+                data[detsort[l]][isinrec - 1] = cc.value;
                 var a = 0;
-                var v = document.getElementById("t" + dettorec[l]);
+                var v = document.getElementById("t" + detsort[l]);
                 v.innerHTML = cc.value;
                 if (cc.value == '')
-                    data[dettorec[l]][isinrec - 1] = 0;
+                    data[detsort[l]][isinrec - 1] = 0;
                 val = cc.value;
                 cc.value = 0;
                 var msg = "Добавлен в корзину";
@@ -932,7 +932,7 @@ function findIt(findtype) {
                     for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
                         h = h + allSubgrGrData[t].length;
                         if (h > countDet) {
-                            if (findtype == true && allSubgrGrData[t][countDet - prevh + 1][4] == 0) {
+                            if (findtype == true && allSubgrGrData[t][countDet - prevh][4] == 0) {
                                 q = grNames.length;
                                 break;
                             }
@@ -968,11 +968,11 @@ function findIt(findtype) {
                     var h = 0;
                     for (var q = 0; q < grNames.length; q++)
                         for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
-                            h = h + allSubgrGrData[t].length - 1;
+                            h = h + allSubgrGrData[t].length;
                             if (h > countDet) {
-                                if (findtype == true && allSubgrGrData[t][countDet - prevh + 1][4] == 0)
+                                if (findtype == true && allSubgrGrData[t][countDet - prevh][4] == 0)
                                     return;
-                                change(allSubgrGrData[t][countDet - prevh + 1][1], allSubgrGrData[t][countDet - prevh + 1][2], allSubgrGrData[t][countDet - prevh + 1][0]);
+                                change(allSubgrGrData[t][countDet - prevh][1], allSubgrGrData[t][countDet - prevh][2], allSubgrGrData[t][countDet - prevh][0]);
                                 scrollIV(countDet + 1, "uls");
                                 curfind = countDet;
                                 isfind = true;
