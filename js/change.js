@@ -273,18 +273,17 @@ function setup(ul) {
     class_tree();
     //Корректируем данные, если вдруг родителя какой-то группы нет среди выгруженных
     for (var i = 0; i < grNames.length; i++) {
-        var clear_parent = true;
+        var parent_ind = -1;
         for (var j = 0; j < grNames.length; j++)
             if (grNames[i][3] == grNames[j][2]) {
-                clear_parent = false;
+                parent_ind = j;
                 break;
             }
-        if (clear_parent == true)
-            grNames[i][3] = 0;
+        grNames[i][3] = parent_ind;
     }
     var buff = [];
     //Массив строк, содержащих HTML-код дерева функциональных групп
-    funk_group(0, buff);
+    funk_group(-1, buff);
     ul.innerHTML = "<br>" + '' + buff.join('');
     buff = [];
     for (var i = 0; i < data.length ; i++)
@@ -298,7 +297,6 @@ function setup(ul) {
                 break;
             }
         }
-        
         data[i][12] = index;
     }
 
@@ -321,10 +319,10 @@ var jj = 0;
 var previmg = -1;
 var prevpos = -1;
 //Формирует элементы, входящие в группу
-function funk_group(par_gr, buff) {
+function funk_group(par_ind, buff) {
     for (var i = 0; i < grNames.length; i++) {
-        if (grNames[i][3] != par_gr)
-            continue;//Выполняется только для групп, для которых par_gr является родителем
+        if (grNames[i][3] != par_ind)
+            continue;//Выполняется только для групп, для которых par_ind является родителем
         var group_content = '';
         // Строка, формирующая подгруппы и элементы подгрупп для данной группы.
         // !!! note_001_mal !!! 'group_content' формируется без закрывающего тега </div>,
@@ -379,7 +377,7 @@ function funk_group(par_gr, buff) {
         }
         buff.push(group_content);
         //Формируем дочерние группы для данной
-        funk_group(grNames[i][2], buff);
+        funk_group(i, buff);
         buff.push("</div>");
         // См. note_001_mal
     }
@@ -1382,16 +1380,23 @@ function boxVisible(imageNum, num, visible, force) {
             // left, top,   width, height
             // 1) -   2) _| 3) _   4) |_
             var line_width = 4;
-            var plus = new Array(new Array(p.x + c[0], p.y + c[1], c[2] - c[0] + 4, line_width), new Array(p.x + c[2], p.y + c[1], line_width, c[3] - c[1] + 4), new Array(p.x + c[0], p.y + c[3], c[2] - c[0] + 4, line_width), new Array(p.x + c[0], p.y + c[1], line_width, c[3] - c[1] + 4));
+            var box_width  = c[2] - c[0] + line_width;
+            var box_height = c[3] - c[1] + line_width;
+            var plus = new Array(
+                new Array(p.x + c[0] - line_width / 2, p.y + c[1] - line_width / 2, box_width, line_width),
+                new Array(p.x + c[2] - line_width / 2, p.y + c[1] - line_width / 2, line_width, box_height),
+                new Array(p.x + c[0] - line_width / 2, p.y + c[3] - line_width / 2, box_width, line_width),
+                new Array(p.x + c[0] - line_width / 2, p.y + c[1] - line_width / 2, line_width, box_height)
+                );
             var box;
             for (i = 0; i < 4; ++i) {
                 box = document.getElementById("div" + i + "" + k);
                 if (box != null) {
-                    box.style.marginLeft = plus[i][0] + "px";
+                    /*box.style.marginLeft = plus[i][0] + "px";
                     box.style.marginTop = plus[i][1] + "px";
                     box.style.width = plus[i][2] + "px";
                     box.style.height = plus[i][3] + "px";
-                    box.style.backgroundColor = "#AA0000"
+                    box.style.backgroundColor = "#AA0000"*/
                     if (visible)
                         box.style.display = "block";
                     else {
