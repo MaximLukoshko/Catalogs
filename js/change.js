@@ -1282,8 +1282,16 @@ function change(current, area_index, img_index, p, pp) {
                 for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
                     h = h + allSubgrGrData[t].length;
                     if (h > current - 1) {
-                        setOpen(q + "," + q1);
-                        setOpen(q);
+
+                        setOpen(q + "," + q1);  // Раскрываем подгруппу
+                        openGroupTree(q);       // Раскрываем дерево групп
+
+                        openItemTree(current - 1);  //Раскрываем дерево по составу
+                        current += 2000000;
+                        setcolored2('tc' + current);
+                        scrollIV('tc' + current, "ulcomp");
+                        current -= 2000000;
+
                         var aa = current - (h - allSubgrGrData[t].length + 1);
                         var c = allSubgrGrData[t][aa][4];
                         if (c != 0) {
@@ -1295,11 +1303,6 @@ function change(current, area_index, img_index, p, pp) {
                             setcolored1('b' + c);
                             open_tree(c, cl);
                             scrollIV('b' + c, "ulclassify");
-                            openItemTree(current - 1);
-                            current += 2000000;
-                            setcolored2('tc' + current);
-                            scrollIV('tc' + current, "ulcomp");
-                            current -= 2000000;
                         } else {
                             if (prev1 != -1) {
                                 var s = document.getElementById(prev1);
@@ -1346,6 +1349,14 @@ function openItemTree(ind) {
     var id = ind + 2000000 + 1;
     setOpen(id);
     openItemTree(data[ind][12]);
+}
+function openGroupTree(ind)
+{
+    if (ind < 0 || ind >= grNames.length)
+        return;
+    var id = ind + 1;
+    setOpen(id);
+    openItemTree(grNames[ind][3]);
 }
 
 function boxVisible(imageNum, num, visible, force) {
