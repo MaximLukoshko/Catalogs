@@ -1381,7 +1381,7 @@ function boxVisible(imageNum, num, visible, force) {
             c[3] = newCoords[imageNum][s][4];
             // left, top,   width, height
             // 1) -   2) _| 3) _   4) |_
-            var plus = new Array(new Array(p.x + c[0], p.y + c[1], c[2] - c[0], 4), new Array(p.x + c[2], p.y + c[1], 4, c[3] - c[1]), new Array(p.x + c[0], p.y + c[3], c[2] - c[0] + 4, 4), new Array(p.x + c[0], p.y + c[1], 4, c[3] - c[1] + 4));
+            var plus = new Array(new Array(p.x + c[0], p.y + c[1], c[2] - c[0] + 4, 4), new Array(p.x + c[2], p.y + c[1], 4, c[3] - c[1] + 4), new Array(p.x + c[0], p.y + c[3], c[2] - c[0] + 4, 4), new Array(p.x + c[0], p.y + c[1], 4, c[3] - c[1] + 4));
             var box;
             for (i = 0; i < 4; ++i) {
                 box = document.getElementById("div" + i + "" + k);
