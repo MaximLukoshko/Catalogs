@@ -21,7 +21,7 @@ var selarr = new Array(40);
 var prevselarr = new Array(40);
 var dettorec = new Array(100);
 var detsort = new Array(100);
-var curimg = 0;
+var curimg = -1;
 var curpos = 0;
 var v = 1;
 var showcls = 0;
@@ -501,7 +501,7 @@ function tree_composition(par_gr, buff) {
                             var tc_ind = allSubgrGrData[ii][jj][1] + 2000000;
                             order_composition.push([allSubgrGrData[ii][jj][1] - 1, ii, jj, displaying_name]);
                             source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
-                            break;
+//                            break;
                         }
                         
                     }
@@ -861,6 +861,10 @@ function changeDisplay(id) {
             img.src = "./img/plus.gif";
         ul.style.display = 'none';
     }
+
+    if (id >= 1000000)
+        curimg = -1;
+
     var alls = "";
     var divim = document.getElementById("mainImage");
     divim.style.height = "0px";
@@ -919,94 +923,6 @@ function changeDisplay(id) {
     divm.innerHTML = alls;
     doResizeCode();
 }
-
-/*function findIt(findtype) {
-    var t = 0;
-    var prevh = 0;
-    var countDet = 0;
-    var findv = document.getElementById('typef').value;
-    if (v == 1) {
-        if (curfind < colbolts)
-            countDet = curfind + 1;
-    } else if (curfind > 1)
-        countDet = curfind - 1;
-    if (v == 1) {
-        if (prevfind != findv || cur != curfind) {
-            prevfind = findv;
-            countDet = 0;
-        }
-        while (countDet < data.length) {
-            // for (var j=0;j<8;j++)  
-            // {
-            t = 0;
-            var s = data[countDet][3] + ' ' + data[countDet][2];
-            s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
-            if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1) {
-                var h = 0;
-                for (var q = 0; q < grNames.length; q++)
-                    for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
-                        h = h + allSubgrGrData[t].length;
-                        if (h > countDet) {
-                            if (findtype == true && allSubgrGrData[t][countDet - prevh][4] == 0) {
-                                q = grNames.length;
-                                break;
-                            }
-                            change(allSubgrGrData[t][countDet - prevh][1], allSubgrGrData[t][countDet - prevh][2], allSubgrGrData[t][countDet - prevh][0]);
-                            scrollIV(countDet + 1, "uls");
-                            curfind = countDet;
-                            isfind = true;
-                            return;
-                        }
-                        t++;
-                        prevh = h;
-                    }
-            }
-            countDet++;
-        }
-        if (countDet == data.length && isfind) {
-            curfind = 0;
-            isfind = false;
-            findIt(findtype);
-        }
-    } else {
-        if (prevfind != findv || cur != curfind) {
-            prevfind = findv;
-            countDet = data.length - 1;
-        }
-        if (curfind != 0)
-            while (countDet >= 0) {
-                //for (var j=0;j<8;j++)  
-                // {
-                var s = data[countDet][3] + ' ' + data[countDet][2];
-                s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
-                if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1) {
-                    var h = 0;
-                    for (var q = 0; q < grNames.length; q++)
-                        for (var q1 = 0; q1 < allSubgrGrNames[q].length; q1++) {
-                            h = h + allSubgrGrData[t].length;
-                            if (h > countDet) {
-                                if (findtype == true && allSubgrGrData[t][countDet - prevh][4] == 0)
-                                    return;
-                                change(allSubgrGrData[t][countDet - prevh][1], allSubgrGrData[t][countDet - prevh][2], allSubgrGrData[t][countDet - prevh][0]);
-                                scrollIV(countDet + 1, "uls");
-                                curfind = countDet;
-                                isfind = true;
-                                return;
-                            }
-                            t++;
-                            prevh = h;
-                        }
-                }
-                //   }
-                countDet--;
-            }
-        if (curfind == 0 && countDet == 0 && isfind) {
-            curfind = data.length - 1;
-            isfind = false;
-            findIt(findtype);
-        }
-    }
-}*/
 
 function findIt(findtype)
 {
