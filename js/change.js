@@ -1354,9 +1354,9 @@ function openGroupTree(ind)
 {
     if (ind < 0 || ind >= grNames.length)
         return;
-    var id = ind + 1;
-    setOpen(id);
-    openItemTree(grNames[ind][3]);
+//    var id = ind + 1;
+    setOpen(ind);
+    openGroupTree(grNames[ind][3]);
 }
 
 function boxVisible(imageNum, num, visible, force) {
@@ -1403,11 +1403,11 @@ function boxVisible(imageNum, num, visible, force) {
             for (i = 0; i < 4; ++i) {
                 box = document.getElementById("div" + i + "" + k);
                 if (box != null) {
-                    /*box.style.marginLeft = plus[i][0] + "px";
+                    box.style.marginLeft = plus[i][0] + "px";
                     box.style.marginTop = plus[i][1] + "px";
                     box.style.width = plus[i][2] + "px";
                     box.style.height = plus[i][3] + "px";
-                    box.style.backgroundColor = "#AA0000"*/
+                    box.style.backgroundColor = "#AA0000"
                     if (visible)
                         box.style.display = "block";
                     else {
