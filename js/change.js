@@ -2,7 +2,7 @@ var prev_image = 0;
 var oldv = 1;
 var myWin;
 var jst;
-var cur = 1;
+var cur = -1;
 var prev = -1;
 var prev1 = -1;
 var prev2 = -1;
@@ -943,11 +943,17 @@ function find_by_name(find_array)
 
     
     for (var i = 0; i < find_array.length;i++)
-        if (find_array[i][0] == cur)
-        {
-            start_index = i;
-            break;
-        }
+    if (find_array[i][0] == cur)
+    {
+        start_index = i;
+        break;
+    }
+
+    if (start_index < 0)
+        start_index = find_array.length - 1;
+
+    if (start_index >= find_array.length)
+        start_index = 0;
 
     var cur_index = start_index + find_direction;
     while (cur_index !=start_index)
@@ -980,7 +986,7 @@ function find_by_name(find_array)
     }
 
     curfind = -1;
-//    change(-1, -1, -1);
+    change(-1, -1, -1);
 }
 
 function scrollIV(id, ps) {
@@ -1019,24 +1025,27 @@ function scaleIt(v, width, height) {
     boxVisible(curimg, curpos, true, true);
 }
 function setcolored(current, color) {
-    var a = current - findsize;
-    var selindex = 0;
-    if (a <= 1)
-        a = 1;
-    var aa = current + findsize;
-    if (aa >= data.length)
-        aa = data.length;
-    for (var k = a; k <= aa; k++) {
-        if (data[k - 1][0] == data[current - 1][0] && data[k - 1][1] == data[current - 1][1]) {
-            selarr[selindex] = k;
-            selindex++;
-            var kk = document.getElementById(k);
-            kk.style.background = color;
-            //          var t = k + 2000000;
-            //          kk = document.getElementById("li" + t);
-            //          kk.style.background = color;
+    if (current > 0)
+    {
+        var a = current - findsize;
+        var selindex = 0;
+        if (a <= 1)
+            a = 1;
+        var aa = current + findsize;
+        if (aa >= data.length)
+            aa = data.length;
+        for (var k = a; k <= aa; k++) {
+            if (data[k - 1][0] == data[current - 1][0] && data[k - 1][1] == data[current - 1][1]) {
+                selarr[selindex] = k;
+                selindex++;
+                var kk = document.getElementById(k);
+                kk.style.background = color;
+                //          var t = k + 2000000;
+                //          kk = document.getElementById("li" + t);
+                //          kk.style.background = color;
+            }
+            //else selarr[selindex] = -1;
         }
-        //else selarr[selindex] = -1;
     }
     var t = 0;
     while (t < selarr.length) {
@@ -1322,6 +1331,7 @@ function change(current, area_index, img_index, p, pp) {
         for (j = 0; j < tablelenth - 1 - 1; j++)
             tdListName[j].innerHTML = "";
         boxVisible(-1, -1, true, true);
+        setcolored(-1);
     }
 }
 function setOpen(q) {
