@@ -332,8 +332,8 @@ function funk_group(par_ind, buff) {
         //Формируем подгруппы, входящие в группы
         for (var j = 0; j < allSubgrGrNames[i].length; j++) {
             var nn = 0;
-            if (allSubgrGrData[jj][0][2] == '-1')
-                allSubgrGrData[jj][0][0] = numbimg(data[allSubgrGrData[jj][0][1] - 1][0]);
+          //  if (allSubgrGrData[jj][0][2] == '-1')
+            //    allSubgrGrData[jj][0][0] = numbimg(data[allSubgrGrData[jj][0][1] - 1][0]);
             allSubgrGrNames[i][j][1] = '';
             group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
@@ -1462,6 +1462,9 @@ function change_image() {
     change_image_flag(true);
 }
 function change_image_flag(flag) {
+    if (curimg < 0)
+        return;
+
     document.images.show.src = imgarray[curimg][0];
     document.images.show.useMap = "#coordmap" + curimg;
     var imgname = document.getElementById("imgname");
