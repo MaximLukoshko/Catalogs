@@ -983,6 +983,20 @@ function find_by_name(find_array)
         cur_index += find_direction;
     }
 
+    if (cur_index == start_index)
+    {
+        var dat_ind = find_array[cur_index][0];
+        var s = find_array[cur_index][3];
+        s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
+        if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1) {
+            var asgd_i = find_array[cur_index][1];
+            var asgd_j = find_array[cur_index][2];
+            change(allSubgrGrData[asgd_i][asgd_j][1], allSubgrGrData[asgd_i][asgd_j][2], allSubgrGrData[asgd_i][asgd_j][0]);
+            curfind = dat_ind;
+            return;
+        }
+    }
+
     curfind = -1;
     change(-1, -1, -1);
 }
