@@ -80,7 +80,7 @@ function settables(i) {
     for (var j = 1; j < allSubgrGrData[i].length; j++) {
         dataarr[j - 1] = allSubgrGrData[i][j];
     }
-    dataarr.sort(sSort);
+//    dataarr.sort(sSort);
     for (var j = 0; j < dataarr.length; j++) {
         dettorec[j] = kk;
         detsort[j] = dataarr[j][1] - 1;
