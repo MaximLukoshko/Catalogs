@@ -1715,7 +1715,7 @@ function doResizeCode() {
     sf.style.height = "18px";
     var typef = document.getElementById("btnc");
     typef.style.position = "absolute";
-    typef.style.left = "219px";
+    typef.style.left = "98px";
     typef.style.top = "32px";
     var typef = document.getElementById("btnf");
     typef.style.position = "absolute";
@@ -1723,7 +1723,7 @@ function doResizeCode() {
     typef.style.top = "32px";
     var typef = document.getElementById("btnclsf");
     typef.style.position = "absolute";
-    typef.style.left = "98px";
+    typef.style.left = "192px";
     typef.style.top = "32px";
     var imgA = document.getElementById("imageAreaDiv");
     var leftcol = document.getElementById("leftcol");
