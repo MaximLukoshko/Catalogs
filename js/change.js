@@ -1315,6 +1315,7 @@ function change(current, area_index, img_index, p, pp) {
 
                         setOpen(q + "," + q1);  // Раскрываем подгруппу
                         openGroupTree(q);       // Раскрываем дерево групп
+                        scrollIV(current, "uls");
 
                         openItemTree(current - 1);  //Раскрываем дерево по составу
                         current += 2000000;
