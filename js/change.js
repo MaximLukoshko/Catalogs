@@ -928,14 +928,26 @@ function changeDisplay(id) {
 
 function findIt(findtype)
 {
-    if(findtype==0)
+    if (findtype == 0)
+    {
         find_by_name(order_funcgroups);
+        if (showcls == 1)
+            showclass();
+    }
 
-    if(findtype==1)
+    if (findtype == 1)
+    {
         find_by_name(order_composition);
+        if (showcls3 == 1)
+            showcomposition();
+    }
 
-    if(findtype==2)
+    if (findtype == 2)
+    {
         find_by_name(order_classify);
+        if (showcls2 == 1)
+            showclassify();
+    }
 }
 
 function find_by_name(find_array)
