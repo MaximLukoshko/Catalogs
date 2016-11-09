@@ -139,6 +139,7 @@ function openRecucle(ii) {
         s = s + "<div id='recle' class='fgr'>";
         s = s + "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
         s = s + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
         //s = s +"<div class=\"submit\" id='exel'  onClick=\"newXLS();\">"+ trans[3] +"</div>";    
         modify = 180;
@@ -147,6 +148,7 @@ function openRecucle(ii) {
         s = s + "<div id='recle' class='fgr'>";
         s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
         s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
         //s = s +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";
         s = s + "<div class='rectable'><table style=\"width:99%;position:relative;left:5px;top:10px;\">";
@@ -219,11 +221,12 @@ function setup(ul) {
         recucle_str = recucle_str + "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
         //recucle_str =recucle_str+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
         recucle_str = recucle_str + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
+        recucle_str = recucle_str + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         recucle_str = recucle_str + "<div class=\"submit\" id='online' onClick=\"online();\">" + trans[2] + "</div>";
         //recucle_str = recucle_str +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
         recucle_elem.innerHTML = recucle_str;
     }
-    isinrec = data[0].length + 1;
+    isinrec = data[0].length + 1 -2;
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
@@ -700,6 +703,7 @@ function setCheck() {
             s = s + "<div id='recle' class='fgr'>";
             s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
             s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
+            s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">->CSV</div>";
             s = s + "<div class=\"submit\" id='online' style=\"position:absolute;width:120px;height:22px;\" onClick=\"online();\">" + trans[2] + "</div>";
             //s = s +"<div class=\"submit\" id='exel' style=\"position:absolute;width:160px;height:22px;\" onClick=\"online();\">"+ trans[3] +"</div>";
             s = s + "<div class='rectable'><table style=\"width:98%;position:relative;left:10px;top:10px;\">";
@@ -1737,6 +1741,17 @@ function doResizeCode() {
         // bt.style.left = imgA.offsetWidth - 250 + "px";
         bt.style.left = imgA.offsetWidth - 105 + "px";
         bt.style.position = "relative";
+        bt.style.top = "-35px";
+        //bt.style.top = "-35px";
+        bt.style.width = "80px";
+        bt.style.height = "22px";
+    }
+
+    bt = document.getElementById("exportToCSV");
+    if (bt != null) {
+        // bt.style.left = imgA.offsetWidth - 250 + "px";
+        bt.style.left = imgA.offsetWidth - 205 + "px";
+        bt.style.position = "relative";
         bt.style.top = "-13px";
         //bt.style.top = "-35px";
         bt.style.width = "80px";
@@ -1763,5 +1778,61 @@ function doResizeCode() {
             ulsc.style.height = document.body.clientHeight - 160 + "px";
         else
             ulsc.style.height = h1 + h2 + "px";
+    }
+}
+
+function exportRecToCsv(filename, rows) {
+    var processRow = function (row) {
+        var finalVal = '';
+        for (var j = 0; j < row.length; j++) {
+            var innerValue = row[j] === null ? '' : row[j].toString();
+            if (row[j] instanceof Date) {
+                innerValue = row[j].toLocaleString();
+            };
+            var result = innerValue.replace(/"/g, '""');
+            if (result.search(/("|,|\n)/g) >= 0)
+                result = '"' + result + '"';
+            if (j > 0)
+                finalVal += ',';
+            finalVal += result;
+        }
+        return finalVal + '\n';
+    };
+
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdList = trList[0].getElementsByTagName('td');
+
+    var csvFile = 'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Группа;Подгруппа;Кол-во в корзине\n';
+    for (var i = 0; i < data.length; i++) {
+        if (data[i][isinrec - 2] == '1') {
+
+            for (j = 2; j < tdList.length - 2; j++)
+                csvFile = csvFile + data[i][j] + ";";
+
+            csvFile = csvFile + data[i][8] + ";";
+            csvFile = csvFile + data[i][9] + ";";
+            csvFile = csvFile + data[i][isinrec - 1] + ";";
+
+            csvFile += "\n";
+        }
+    }
+
+    csvFile = "\uFEFF" + csvFile;
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=UTF-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 }
