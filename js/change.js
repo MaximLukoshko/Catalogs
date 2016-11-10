@@ -119,24 +119,54 @@ function settables_for_group(i) {
     form_table_by_array(buff);
 }
 
-function form_table_by_array(ind_array)
+function form_buff_for_group(gr_ind, buff)
 {
+    for (var i = 0; i < allSubgrGrData[gr_ind].length; i++)
+        buff.push(allSubgrGrData[gr_ind][i][1] - 1);
+
+    for (var i = 0; i < grNames.length; i++)
+        if (grNames[i][3] == gr_ind)
+            form_buff_for_group(i, buff);
+}
+
+function settables_for_item(i) {
+    var item_name = data[i][2] != "" ? data[i][2] : data[i][3];
+    group.innerHTML = "<div class=\"hh2\">" + trans[0] + ":</div>" + "<div class=\"hh3\">" + item_name + "</div>";
+
+    var buff = [];
+    form_buff_for_item(i, buff);
+    buff.sort(function (a, b) { return a - b; });
+
+    form_table_by_array(buff);
+}
+
+function form_buff_for_item(item_ind, buff)
+{
+    buff.push(item_ind);
+    for (var i = 0; i < data.length; i++)
+        if (data[i][12] == item_ind)
+        {
+            form_buff_for_item(i, buff);
+        }
+}
+
+function form_table_by_array(ind_array) {
     var table = document.getElementById('tablID');
+    var group = document.getElementById('group');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
-    var s = "";
-    var group = document.getElementById('group');
-
-    for (var i = 0; i < ind_array.length; i++)
-    {
+    var s = '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
+    for (var j = 1; j < tablelenth; j++)
+        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
+    s = '<tr>' + s + '</tr>';
+    for (var i = 0; i < ind_array.length; i++) {
         var cur_ind = ind_array[i];
         var dat = data[cur_ind];
         dettorec[i] = cur_ind;
         detsort[i] = cur_ind;
 
         s = s + '<tr>';
-        for (var m = 0; m < tablelenth; m++)
-        {
+        for (var m = 0; m < tablelenth; m++) {
             var r = '';
             if (m < tablelenth - 2) {
                 r = dat[m];
@@ -154,61 +184,6 @@ function form_table_by_array(ind_array)
     dettorec[ind_array.length] = -1;
     detsort[ind_array.length] = -1;
 
-    s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
-    table.innerHTML = s;
-    doResizeCode();
-}
-
-function form_buff_for_group(gr_ind, buff)
-{
-    for (var i = 0; i < allSubgrGrData[gr_ind].length; i++)
-        buff.push(allSubgrGrData[gr_ind][i][1] - 1);
-
-    for (var i = 0; i < grNames.length; i++)
-        if (grNames[i][3] == gr_ind)
-            form_buff_for_group(i, buff);
-}
-
-function settables_for_item(i) {
-    var table = document.getElementById('tablID');
-    var trList = table.getElementsByTagName('tr');
-    var tdListName = trList[0].getElementsByTagName('td');
-    var s = "";
-    var group = document.getElementById('group');
-    var kk = allSubgrGrData[i][0][1] - 1;
-    group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[kk][tablelenth - 1] + " / " + data[kk][tablelenth] + "</div>";
-    s = s + '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
-    for (var j = 1; j < tablelenth; j++)
-        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
-    s = '<tr>' + s + '</tr>';
-    var dataarr = [];
-    for (var j = 1; j < allSubgrGrData[i].length; j++) {
-        dataarr[j - 1] = allSubgrGrData[i][j];
-    }
-    //    dataarr.sort(sSort);
-    for (var j = 0; j < dataarr.length; j++) {
-        dettorec[j] = kk;
-        detsort[j] = dataarr[j][1] - 1;
-        kk++;
-        s = s + '<tr>';
-        for (var m = 0; m < tablelenth; m++) {
-            //if (dataarr[j][2]!=-1)
-            var r = '';
-            if (m < tablelenth - 2) {
-                //if (dataarr[j][m]!= '')
-                r = data[dataarr[j][1] - 1][m];
-            } else {
-                if (m == tablelenth - 2) {
-                    r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + (dataarr[j][1] - 1) + "\">";
-                }
-                if (m == tablelenth - 1)
-                    r = "<div id='t" + (dataarr[j][1] - 1) + "'>" + data[dataarr[j][1] - 1][isinrec - 1] + "</div>";
-            }
-            s = s + '<td>' + r + '</td>';
-        }
-        s = s + '</tr>';
-    }
-    dettorec[dataarr.length] = -1;
     s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
     table.innerHTML = s;
     doResizeCode();
@@ -575,7 +550,7 @@ function class_tree() {
     }
 }
 
-var m_composition = 0;
+
 function tree_composition(par_gr, buff) {
     var arr = [];
     for (var i = 0; i < allSubgrGrData.length; i++) {
@@ -586,11 +561,12 @@ function tree_composition(par_gr, buff) {
             else
                 name = allSubgrGrData[i][j][3];
             if (par_gr == data[allSubgrGrData[i][j][1] - 1][12] && isnotElemIn(arr, name)) {
-                m_composition = allSubgrGrData[i][j][1] + 2000000;
+                var m_composition = allSubgrGrData[i][j][1] + 2000000;
+                var item_ind = allSubgrGrData[i][j][1] - 1;
                 var source = "";
 
                 var displaying_name = allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2];
-                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
+                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + item_ind + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + item_ind + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
                 arr.push(name);
                 for (var ii = 0; ii < allSubgrGrData.length; ii++)
                 {
@@ -614,7 +590,6 @@ function tree_composition(par_gr, buff) {
                     }
                 }
                 buff.push(source);
-                //tree_composition(data[allSubgrGrData[i][j][1] - 1][11], buff);
                 var pos = allSubgrGrData[i][j][1] - 1;
                 tree_composition(pos, buff);
                 buff.push("</div>");
