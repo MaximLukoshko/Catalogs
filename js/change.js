@@ -226,7 +226,7 @@ function setup(ul) {
         //recucle_str = recucle_str +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
         recucle_elem.innerHTML = recucle_str;
     }
-    isinrec = data[0].length + 1 -2;
+    isinrec = data[0].length -2;
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
