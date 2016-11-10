@@ -108,6 +108,112 @@ function settables(i) {
     table.innerHTML = s;
     doResizeCode();
 }
+
+function settables_for_group(i) {
+    group.innerHTML = "<div class=\"hh2\">" + trans[0] + ":</div>" + "<div class=\"hh3\">" + grNames[i][1] + ". " + grNames[i][0] + "</div>";
+
+    var buff = [];
+    form_buff_for_group(i, buff);
+    buff.sort(function (a, b) { return a - b; });
+
+    form_table_by_array(buff);
+}
+
+function form_table_by_array(ind_array)
+{
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdListName = trList[0].getElementsByTagName('td');
+    var s = "";
+    var group = document.getElementById('group');
+
+    for (var i = 0; i < ind_array.length; i++)
+    {
+        var cur_ind = ind_array[i];
+        var dat = data[cur_ind];
+        dettorec[i] = cur_ind;
+        detsort[i] = cur_ind;
+
+        s = s + '<tr>';
+        for (var m = 0; m < tablelenth; m++)
+        {
+            var r = '';
+            if (m < tablelenth - 2) {
+                r = dat[m];
+            } else {
+                if (m == tablelenth - 2) {
+                    r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\">";
+                }
+                if (m == tablelenth - 1)
+                    r = "<div id='t" + cur_ind + "'>" + dat[isinrec - 1] + "</div>";
+            }
+            s = s + '<td>' + r + '</td>';
+        }
+        s = s + '</tr>';
+    }
+    dettorec[ind_array.length] = -1;
+    detsort[ind_array.length] = -1;
+
+    s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
+    table.innerHTML = s;
+    doResizeCode();
+}
+
+function form_buff_for_group(gr_ind, buff)
+{
+    for (var i = 0; i < allSubgrGrData[gr_ind].length; i++)
+        buff.push(allSubgrGrData[gr_ind][i][1] - 1);
+
+    for (var i = 0; i < grNames.length; i++)
+        if (grNames[i][3] == gr_ind)
+            form_buff_for_group(i, buff);
+}
+
+function settables_for_item(i) {
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdListName = trList[0].getElementsByTagName('td');
+    var s = "";
+    var group = document.getElementById('group');
+    var kk = allSubgrGrData[i][0][1] - 1;
+    group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[kk][tablelenth - 1] + " / " + data[kk][tablelenth] + "</div>";
+    s = s + '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
+    for (var j = 1; j < tablelenth; j++)
+        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
+    s = '<tr>' + s + '</tr>';
+    var dataarr = [];
+    for (var j = 1; j < allSubgrGrData[i].length; j++) {
+        dataarr[j - 1] = allSubgrGrData[i][j];
+    }
+    //    dataarr.sort(sSort);
+    for (var j = 0; j < dataarr.length; j++) {
+        dettorec[j] = kk;
+        detsort[j] = dataarr[j][1] - 1;
+        kk++;
+        s = s + '<tr>';
+        for (var m = 0; m < tablelenth; m++) {
+            //if (dataarr[j][2]!=-1)
+            var r = '';
+            if (m < tablelenth - 2) {
+                //if (dataarr[j][m]!= '')
+                r = data[dataarr[j][1] - 1][m];
+            } else {
+                if (m == tablelenth - 2) {
+                    r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + (dataarr[j][1] - 1) + "\">";
+                }
+                if (m == tablelenth - 1)
+                    r = "<div id='t" + (dataarr[j][1] - 1) + "'>" + data[dataarr[j][1] - 1][isinrec - 1] + "</div>";
+            }
+            s = s + '<td>' + r + '</td>';
+        }
+        s = s + '</tr>';
+    }
+    dettorec[dataarr.length] = -1;
+    s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
+    table.innerHTML = s;
+    doResizeCode();
+}
+
 function numbimg(i) {
     var k = 0;
     while (k < imgarray.length) {
@@ -330,7 +436,7 @@ function funk_group(par_ind, buff) {
         // Строка, формирующая подгруппы и элементы подгрупп для данной группы.
         // !!! note_001_mal !!! 'group_content' формируется без закрывающего тега </div>,
         // поэтому после завершения формирования строк с дочерними группами в buff необходимо добавить этот самый тег
-        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");'  ><font size=\"2\" color=\"navy\">" + grNames[i][1] + ". " + grNames[i][0] + "</font></div>";
+        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")'  ><font size=\"2\" color=\"navy\">" + grNames[i][1] + ". " + grNames[i][0] + "</font></div>";
         group_content += "<div  id='ul" + i + "' style='display:none; margin-left:10px; padding-bottom: 6px'>";
         //Формируем подгруппы, входящие в группы
         for (var j = 0; j < allSubgrGrNames[i].length; j++) {
@@ -1816,7 +1922,7 @@ function exportRecToCsv(filename, rows) {
     var trList = table.getElementsByTagName('tr');
     var tdList = trList[0].getElementsByTagName('td');
 
-    var csvFile = 'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Группа;Подгруппа;Кол-во в корзине\n';
+    var csvFile = 'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Кол-во в корзине\n';
     for (var i = 0; i < data.length; i++) {
         if (data[i][isinrec - 2] == '1') {
 
