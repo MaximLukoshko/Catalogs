@@ -64,57 +64,35 @@ function sSort(i, ii) {
             return 0;
     }
 }
-function settables(i) {
-    var table = document.getElementById('tablID');
-    var trList = table.getElementsByTagName('tr');
-    var tdListName = trList[0].getElementsByTagName('td');
-    var s = "";
+function settables_for_subgroups(gr_ind,subgr_ind) {
+    var grFullName = grNames[gr_ind][1] + ". " + grNames[gr_ind][0];
+    var subgrFullName = allSubgrGrNames[gr_ind][subgr_ind][1] == "" ? "" : allSubgrGrNames[gr_ind][subgr_ind][1] + ". ";
+    subgrFullName += allSubgrGrNames[gr_ind][subgr_ind][0];
+
     var group = document.getElementById('group');
-    var kk = allSubgrGrData[i][0][1] - 1;
-    group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[kk][tablelenth - 1] + " / " + data[kk][tablelenth] + "</div>";
-    s = s + '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
-    for (var j = 1; j < tablelenth; j++)
-        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
-    s = '<tr>' + s + '</tr>';
-    var dataarr = [];
-    for (var j = 1; j < allSubgrGrData[i].length; j++) {
-        dataarr[j - 1] = allSubgrGrData[i][j];
+    group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + grFullName + " / " + subgrFullName + "</div>";
+
+    var subgr_pos = 0; // Индекс подгруппы в массиве allSubgrGrNames
+    for (var i = 0; i < gr_ind; i++)
+        subgr_pos += allSubgrGrNames[i].length;
+    subgr_pos += subgr_ind;
+
+    var buff = [];
+    for (var k = 0; k < allSubgrGrData[subgr_pos].length; k++)
+    {
+        var ind = allSubgrGrData[subgr_pos][k][1] - 1;
+        buff.push(ind);
     }
-//    dataarr.sort(sSort);
-    for (var j = 0; j < dataarr.length; j++) {
-        dettorec[j] = kk;
-        detsort[j] = dataarr[j][1] - 1;
-        kk++;
-        s = s + '<tr>';
-        for (var m = 0; m < tablelenth; m++) {
-            //if (dataarr[j][2]!=-1)
-            var r = '';
-            if (m < tablelenth - 2) {
-                //if (dataarr[j][m]!= '')
-                r = data[dataarr[j][1] - 1][m];
-            } else {
-                if (m == tablelenth - 2) {
-                    r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + (dataarr[j][1] - 1) + "\">";
-                }
-                if (m == tablelenth - 1)
-                    r = "<div id='t" + (dataarr[j][1] - 1) + "'>" + data[dataarr[j][1] - 1][isinrec - 1] + "</div>";
-            }
-            s = s + '<td>' + r + '</td>';
-        }
-        s = s + '</tr>';
-    }
-    dettorec[dataarr.length] = -1;
-    s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
-    table.innerHTML = s;
-    doResizeCode();
+
+    form_table_by_array(buff);
 }
 
 function settables_for_group(i) {
+    var group = document.getElementById('group');
     group.innerHTML = "<div class=\"hh2\">" + trans[0] + ":</div>" + "<div class=\"hh3\">" + grNames[i][1] + ". " + grNames[i][0] + "</div>";
 
     var buff = [];
     form_buff_for_group(i, buff);
-    buff.sort(function (a, b) { return a - b; });
 
     form_table_by_array(buff);
 }
@@ -130,12 +108,12 @@ function form_buff_for_group(gr_ind, buff)
 }
 
 function settables_for_item(i) {
+    var group = document.getElementById('group');
     var item_name = data[i][2] != "" ? data[i][2] : data[i][3];
-    group.innerHTML = "<div class=\"hh2\">" + trans[0] + ":</div>" + "<div class=\"hh3\">" + item_name + "</div>";
+    group.innerHTML = "<div class=\"hh2\">" +  "</div>" + "<div class=\"hh3\">" + item_name + "</div>";
 
     var buff = [];
     form_buff_for_item(i, buff);
-    buff.sort(function (a, b) { return a - b; });
 
     form_table_by_array(buff);
 }
@@ -145,14 +123,13 @@ function form_buff_for_item(item_ind, buff)
     buff.push(item_ind);
     for (var i = 0; i < data.length; i++)
         if (data[i][12] == item_ind)
-        {
             form_buff_for_item(i, buff);
-        }
 }
 
 function form_table_by_array(ind_array) {
+    ind_array.sort(function (a, b) { return a - b; });
+
     var table = document.getElementById('tablID');
-    var group = document.getElementById('group');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
     var s = '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
@@ -419,7 +396,7 @@ function funk_group(par_ind, buff) {
           //  if (allSubgrGrData[jj][0][2] == '-1')
             //    allSubgrGrData[jj][0][0] = numbimg(data[allSubgrGrData[jj][0][1] - 1][0]);
             allSubgrGrNames[i][j][1] = '';
-            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables(" + jj + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
+            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
             //Формируем элементы, входящие в группы
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
