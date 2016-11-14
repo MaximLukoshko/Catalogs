@@ -32,8 +32,12 @@ var previd = "";
 var findsize = 100;
 
 // Переменные-индексы
-var ind_asgd_data_ind = 1;
-var ind_asgd_position = 2;
+var IND_ASGD_IMG_POS  = 0;
+var IND_ASGD_DATA_IND = 1;
+var IND_ASGD_POSITION = 2;
+var IND_ASGD_NAME     = 3;
+var IND_ASGD_GROUP    = 4;
+var IND_ASGD_SOME_CODE= 5;
 
 //Переменные для поиска
 var curfind = -1;
@@ -49,7 +53,7 @@ function changetypef(f) {
 }
 function isgetdetal(j) {
     for (var i = 0; i < allSubgrGrData[j].length; i++) {
-        if (allSubgrGrData[j][i][ind_asgd_position] != '-1')
+        if (allSubgrGrData[j][i][IND_ASGD_POSITION] != '-1')
             return true;
     }
     return false;
@@ -83,7 +87,7 @@ function settables_for_subgroups(gr_ind,subgr_ind) {
     var buff = [];
     for (var k = 0; k < allSubgrGrData[subgr_pos].length; k++)
     {
-        var ind = allSubgrGrData[subgr_pos][k][ind_asgd_data_ind] - 1;
+        var ind = allSubgrGrData[subgr_pos][k][IND_ASGD_DATA_IND] - 1;
         buff.push(ind);
     }
 
@@ -103,7 +107,7 @@ function settables_for_group(i) {
 function form_buff_for_group(gr_ind, buff)
 {
     for (var i = 0; i < allSubgrGrData[gr_ind].length; i++)
-        buff.push(allSubgrGrData[gr_ind][i][ind_asgd_data_ind] - 1);
+        buff.push(allSubgrGrData[gr_ind][i][IND_ASGD_DATA_IND] - 1);
 
     for (var i = 0; i < grNames.length; i++)
         if (grNames[i][3] == gr_ind)
@@ -380,13 +384,10 @@ function setup(ul) {
 }
 
 function fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name) {
-    if (cur_asgd[2] == '-1')
-        cur_asgd[0] = numbimg(cur_dat[0]);
-    var ss = "";
-    cur_dat[3] = cur_asgd[3];
-    if (cur_asgd[5] != 0 && cur_asgd[3] != cur_dat[2])
-        ss = " " + cur_dat[2];
-    if (cur_asgd[3] == cur_dat[2]) {
+    if (cur_asgd[IND_ASGD_POSITION] == '-1')
+        cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_dat[0]);
+    cur_dat[3] = cur_asgd[IND_ASGD_NAME];
+    if (cur_asgd[IND_ASGD_NAME] == cur_dat[2]) {
         cur_dat[3] = cur_dat[2];
         cur_dat[2] = '';
     }
@@ -418,29 +419,40 @@ function funk_group(par_ind, buff) {
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
             //Формируем элементы, входящие в группы
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
+
+                var cur_asgd = allSubgrGrData[jj][k];
+                var cur_dat_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
+                var cur_dat = data[cur_dat_ind];
+                var cur_gr_name = grNames[i];
+                var cur_subgr_name = allSubgrGrNames[i][j];
+
+                fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name);
+
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
                 for (var m = 0; m < grIllustration.length; m++)
-                    if (grIllustration[m][0] == allSubgrGrData[jj][k][ind_asgd_data_ind]) {
+                    if (grIllustration[m][0] == cur_asgd[IND_ASGD_DATA_IND]) {
                         img_pos = m;
                         break;
                     }
 
+                var ss = "";
+                if (cur_asgd[IND_ASGD_SOME_CODE] != 0 && cur_asgd[IND_ASGD_NAME] != cur_dat[2])
+                    ss = " " + cur_dat[2];
 
-                var cur_asgd = allSubgrGrData[jj][k];
-                var cur_dat_ind = cur_asgd[ind_asgd_data_ind] - 1;
-                var cur_dat = data[cur_dat_ind];
-                var cur_gr_name = grNames[i];
-                var cur_subgr_name = allSubgrGrNames[i][j];
-                fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name);
+                var displaying_name = cur_asgd[IND_ASGD_NAME] + ss;
 
-                if (img_pos == -1)
-                    group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" + allSubgrGrData[jj][k][1] + "' >&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a>";
-                else
-                    group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
+                group_content += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'>";
 
-                var displaying_name = allSubgrGrData[jj][k][3] + ss;
-                order_funcgroups.push([allSubgrGrData[jj][k][1] - 1, jj, k, displaying_name]);
+                if (img_pos != -1)
+                    group_content += "<div style='height:14px'>";
+
+                group_content += "<a onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");'><div  class='bolt' id='" + cur_asgd[IND_ASGD_DATA_IND] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + displaying_name + "</div></a>";
+
+                if (img_pos != -1)
+                    group_content += "<img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + cur_asgd[IND_ASGD_NAME] + " " + cur_dat[2] + "');\"></div>";
+
+                order_funcgroups.push([cur_asgd[IND_ASGD_DATA_IND] - 1, jj, k, displaying_name]);
                 d++;
             }
             jj++;
