@@ -37,7 +37,9 @@ var IND_ASGD_DATA_IND = 1;
 var IND_ASGD_POSITION = 2;
 var IND_ASGD_NAME     = 3;
 var IND_ASGD_GROUP    = 4;
-var IND_ASGD_SOME_CODE= 5;
+var IND_ASGD_SOME_CODE = 5;
+var IND_ASGD_GR_SAVED = 6;
+var IND_ASGD_CLS_ID   = 7;
 
 //Переменные для поиска
 var curfind = -1;
@@ -495,19 +497,22 @@ function class_tree() {
             v.innerHTML = "";
         for (var jj = 0; jj < allSubgrGrData.length; jj++)
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
-                if (grClassify[n][0] == allSubgrGrData[jj][k][4]) //if (allSubgrGrData[jj][k][4]==bol)
+                var cur_asgd = allSubgrGrData[jj][k];
+                if (grClassify[n][0] == cur_asgd[IND_ASGD_GROUP])
                 {
                     var s;
-                    if (data[allSubgrGrData[jj][k][1] - 1][2] != "")
-                        s = data[allSubgrGrData[jj][k][1] - 1][2];
-                    if (data[allSubgrGrData[jj][k][1] - 1][2] == "")
-                        s = allSubgrGrData[jj][k][3];
+                    var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
+
+                    if (data[data_ind][2] != "")
+                        s = data[data_ind][2];
+                    else
+                        s = cur_asgd[IND_ASGD_NAME];
+
                     if (v && isnotElemIn(mas, s)) {
                         var m = p + 1000000;
-                        var displaying_name = allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2];
+                        var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + data[data_ind][2];
                         v.innerHTML += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
                         mas[p] = s;
-                        //allSubgrGrData[jj][k][3];
                         p++;
                     }
                     break;
@@ -517,32 +522,34 @@ function class_tree() {
     for (var n = 0; n < grClassify.length; n++) {
         var kk = 0;
         for (var jj = 0; jj < allSubgrGrData.length; jj++)
-            for (var k = 0; k < allSubgrGrData[jj].length; k++) {
-                if (grClassify[n][0] == allSubgrGrData[jj][k][4]) {
+            for (var k = 0; k < allSubgrGrData[jj].length; k++)
+            {
+                var cur_asgd = allSubgrGrData[jj][k];
+                if (grClassify[n][0] == cur_asgd[4]) {
+                    var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
+                    var s;
+                    if (data[data_ind][2] != "")
+                        s = data[data_ind][2];
+                    else
+                        s = cur_asgd[IND_ASGD_NAME];
                     for (var d = 0; d < mas.length; d++) {
-                        var s;
-                        if (data[allSubgrGrData[jj][k][1] - 1][2] != "")
-                            s = data[allSubgrGrData[jj][k][1] - 1][2];
-                        if (data[allSubgrGrData[jj][k][1] - 1][2] == "")
-                            s = allSubgrGrData[jj][k][3];
                         if (mas[d] == s) {
                             var m = d + 1000000;
                             v = document.getElementById("ul" + m);
                             if (v) {
-                                if (data[kk][1] == "")
-                                    allSubgrGrData[jj][k][0] = numbimg(data[kk][0]);
-                                var tr_comp_id = allSubgrGrData[jj][k][1] + 2000000;
-                                var displaying_name = allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2];
-                                order_classify.push([allSubgrGrData[jj][k][1] - 1, jj, k, displaying_name]);
-                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + allSubgrGrData[jj][k][1] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[kk][0] + ", " + trans[13] + " " + data[kk][1] + "</div></a>";
-                                allSubgrGrData[jj][k][6] = allSubgrGrData[jj][k][4];
-                                allSubgrGrData[jj][k][7] = m;
-                                allSubgrGrData[jj][k][4] = bol;
+                                if (data[data_ind][1] == "")
+                                    cur_asgd[IND_ASGD_IMG_POS] = numbimg(data[data_ind][0]);
+                                var tr_comp_id = cur_asgd[IND_ASGD_DATA_IND] + 2000000;
+                                var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + data[data_ind][2];
+                                order_classify.push([data_ind, jj, k, displaying_name]);
+                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[data_ind][0] + ", " + trans[13] + " " + data[data_ind][1] + "</div></a>";
+                                cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GROUP];
+                                cur_asgd[IND_ASGD_CLS_ID] = m;
+                                cur_asgd[IND_ASGD_GROUP] = bol;
                             }
                             bol++;
                         }
                     }
-                    //break;
                 }
                 kk++;
             }
@@ -1334,15 +1341,9 @@ function change(current, area_index, img_index, p, pp) {
             var gr = 0
                 , pgr = 0;
             var group = document.getElementById('group');
-            // var kk = allSubgrGrData[i][0][1];
+ 
             group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[cur][tablelenth - 1] + " / " + data[cur][tablelenth] + "</div>";
-            //<img src=\"./img/recucle.jpg\" onclick=\"setCheck();\" id=\"check\">";
-            /* for (j = 0; j < tablelenth - 2; j++) {
-        if (tdListName[j].innerText == trans[0])
-            gr = j;
-        if (tdListName[j].innerText == trans[1] )
-            pgr = j;
-    }*/
+
             var s = "";
             var a = current - findsize;
             if (a <= 1)
@@ -1365,33 +1366,23 @@ function change(current, area_index, img_index, p, pp) {
                         if (m < tablelenth - 2)
                             s = s + '<td>' + data[k - 1][m] + '</td>';
                         else {
-                            if (m == tablelenth - 2) {
+                            if (m == tablelenth - 2)
                                 r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; margin-top: 4px; margin-bottom: 2px;\" name=\"countIn\" value='0' id=\"count" + (k - 1) + "\" >";
-                                /* r = r + "<img src=\"./img/recucle.jpg\" onclick=\"setCheck(" + (k - 1) + ");\" style=\"position:relative;top:3px\" name=\"Check\" id=\"check\"></div>";*/
-                            }
-                            // else r = data[k - 1][isinrec - 1];
+
                             if (m == tablelenth - 1)
                                 r = "<div id='t" + (k - 1) + "'>" + data[k - 1][isinrec - 1] + "</div>";
                             s = s + '<td>' + r + '</td>';
                         }
                     }
                     s = s + '</tr>';
-                    //break;
                 }
             }
             dettorec[detindx] = -1;
             detsort[detindx] = -1;
             s = '<table id=\"tabl\" class=\"tdb\"style=\"width:99%;height:99%;position:relative;left:5px;\" >' + s + '</table>';
             table.innerHTML = s;
-            //var k = document.getElementById('count'+cur);
-            // data[cur][isinrec-1]=k.value;
+    
             var f = false;
-            //  var ch = document.getElementById('check');
-            // if (data[current-1][9]=='1')
-            //  ch.checked=true; else  ch.checked=false;  
-            //  var k = document.getElementById('count');
-            //  k.contentEditable='true'; 
-            //k.value=data[current-1][10] ;
             var t = 0;
             var h = 0;
             for (var q = 0; q < grNames.length; q++)
