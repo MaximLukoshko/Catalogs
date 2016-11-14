@@ -16,7 +16,6 @@ var modify = 180;
 var aaa = 0;
 var isfind = false;
 var findup = true;
-var razn;
 var selarr = new Array(40);
 var prevselarr = new Array(40);
 var dettorec = new Array(100);
@@ -32,6 +31,10 @@ var countinrec = 0;
 var previd = "";
 var findsize = 100;
 
+// Переменные-индексы
+var ind_asgd_data_ind = 1;
+var ind_asgd_position = 2;
+
 //Переменные для поиска
 var curfind = -1;
 var find_direction = 1;
@@ -46,7 +49,7 @@ function changetypef(f) {
 }
 function isgetdetal(j) {
     for (var i = 0; i < allSubgrGrData[j].length; i++) {
-        if (allSubgrGrData[j][i][2] != '-1')
+        if (allSubgrGrData[j][i][ind_asgd_position] != '-1')
             return true;
     }
     return false;
@@ -80,7 +83,7 @@ function settables_for_subgroups(gr_ind,subgr_ind) {
     var buff = [];
     for (var k = 0; k < allSubgrGrData[subgr_pos].length; k++)
     {
-        var ind = allSubgrGrData[subgr_pos][k][1] - 1;
+        var ind = allSubgrGrData[subgr_pos][k][ind_asgd_data_ind] - 1;
         buff.push(ind);
     }
 
@@ -100,7 +103,7 @@ function settables_for_group(i) {
 function form_buff_for_group(gr_ind, buff)
 {
     for (var i = 0; i < allSubgrGrData[gr_ind].length; i++)
-        buff.push(allSubgrGrData[gr_ind][i][1] - 1);
+        buff.push(allSubgrGrData[gr_ind][i][ind_asgd_data_ind] - 1);
 
     for (var i = 0; i < grNames.length; i++)
         if (grNames[i][3] == gr_ind)
@@ -375,6 +378,23 @@ function setup(ul) {
 
     doResizeCode()
 }
+
+function fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name) {
+    if (cur_asgd[2] == '-1')
+        cur_asgd[0] = numbimg(cur_dat[0]);
+    var ss = "";
+    cur_dat[3] = cur_asgd[3];
+    if (cur_asgd[5] != 0 && cur_asgd[3] != cur_dat[2])
+        ss = " " + cur_dat[2];
+    if (cur_asgd[3] == cur_dat[2]) {
+        cur_dat[3] = cur_dat[2];
+        cur_dat[2] = '';
+    }
+    cur_dat[isinrec - 1] = 0;
+    cur_dat[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
+    cur_dat[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
+}
+
 var d = 0;
 var jj = 0;
 var previmg = -1;
@@ -393,8 +413,6 @@ function funk_group(par_ind, buff) {
         //Формируем подгруппы, входящие в группы
         for (var j = 0; j < allSubgrGrNames[i].length; j++) {
             var nn = 0;
-          //  if (allSubgrGrData[jj][0][2] == '-1')
-            //    allSubgrGrData[jj][0][0] = numbimg(data[allSubgrGrData[jj][0][1] - 1][0]);
             allSubgrGrNames[i][j][1] = '';
             group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
@@ -403,32 +421,24 @@ function funk_group(par_ind, buff) {
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
                 for (var m = 0; m < grIllustration.length; m++)
-                    if (grIllustration[m][0] == allSubgrGrData[jj][k][1]) {
+                    if (grIllustration[m][0] == allSubgrGrData[jj][k][ind_asgd_data_ind]) {
                         img_pos = m;
                         break;
                     }
-                //Какая-то магия
-                //Начало магии
-                if (allSubgrGrData[jj][k][0] != 0)
-                    razn = data[allSubgrGrData[jj][k][1] - 1][0] - allSubgrGrData[jj][k][0];
-                if (allSubgrGrData[jj][k][2] == '-1')
-                    allSubgrGrData[jj][k][0] = numbimg(data[allSubgrGrData[jj][k][1] - 1][0]);
-                var ss = "";
-                data[allSubgrGrData[jj][k][1] - 1][3] = allSubgrGrData[jj][k][3];
-                if (allSubgrGrData[jj][k][5] != 0 && allSubgrGrData[jj][k][3] != data[allSubgrGrData[jj][k][1] - 1][2])
-                    ss = " " + data[allSubgrGrData[jj][k][1] - 1][2];
-                if (allSubgrGrData[jj][k][3] == data[allSubgrGrData[jj][k][1] - 1][2]) {
-                    data[allSubgrGrData[jj][k][1] - 1][3] = data[allSubgrGrData[jj][k][1] - 1][2];
-                    data[allSubgrGrData[jj][k][1] - 1][2] = '';
-                }
-                data[allSubgrGrData[jj][k][1] - 1][isinrec - 1] = 0;
-                data[allSubgrGrData[jj][k][1] - 1][tablelenth - 1] = grNames[i][1] + " " + grNames[i][0];
-                data[allSubgrGrData[jj][k][1] - 1][tablelenth] = allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0];
-                //Конец магии
+
+
+                var cur_asgd = allSubgrGrData[jj][k];
+                var cur_dat_ind = cur_asgd[ind_asgd_data_ind] - 1;
+                var cur_dat = data[cur_dat_ind];
+                var cur_gr_name = grNames[i];
+                var cur_subgr_name = allSubgrGrNames[i][j];
+                fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name);
+
                 if (img_pos == -1)
                     group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div class='bolt' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' id='" + allSubgrGrData[jj][k][1] + "' >&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a>";
                 else
                     group_content = group_content + "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><div style='height:14px'><a onClick='javascript:change(" + allSubgrGrData[jj][k][1] + "," + allSubgrGrData[jj][k][2] + "," + allSubgrGrData[jj][k][0] + ");'><div  class='bolt' id='" + allSubgrGrData[jj][k][1] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + allSubgrGrData[jj][k][3] + ss + "</div></a><img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + allSubgrGrData[jj][k][3] + " " + data[allSubgrGrData[jj][k][1] - 1][2] + "');\"></div>";
+
                 var displaying_name = allSubgrGrData[jj][k][3] + ss;
                 order_funcgroups.push([allSubgrGrData[jj][k][1] - 1, jj, k, displaying_name]);
                 d++;
