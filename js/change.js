@@ -554,43 +554,49 @@ function tree_composition(par_gr, buff) {
     var arr = [];
     for (var i = 0; i < allSubgrGrData.length; i++) {
         for (var j = 0; j < allSubgrGrData[i].length; j++) {
+
+            var cur_asgd = allSubgrGrData[i][j];
+            var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
+            var cur_data = data[data_ind];
+
             var name = "";
-            if (data[allSubgrGrData[i][j][1] - 1][2] != "")
-                name = data[allSubgrGrData[i][j][1] - 1][2];
+
+            if (cur_data[2] != "")
+                name = cur_data[2];
             else
-                name = allSubgrGrData[i][j][3];
-            if (par_gr == data[allSubgrGrData[i][j][1] - 1][12] && isnotElemIn(arr, name)) {
-                var m_composition = allSubgrGrData[i][j][1] + 2000000;
-                var item_ind = allSubgrGrData[i][j][1] - 1;
+                name = cur_asgd[IND_ASGD_NAME];
+
+            if (par_gr == cur_data[12] && isnotElemIn(arr, name)) {
+                var m_composition = cur_asgd[IND_ASGD_DATA_IND] + 2000000;
                 var source = "";
 
-                var displaying_name = allSubgrGrData[i][j][3] + " " + data[allSubgrGrData[i][j][1] - 1][2];
-                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + item_ind + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + item_ind + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
+                var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + cur_data[2];
+                source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + data_ind + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + data_ind + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
                 arr.push(name);
                 for (var ii = 0; ii < allSubgrGrData.length; ii++)
                 {
                     for (var jj = 0; jj < allSubgrGrData[ii].length; jj++)
                     {
                         var name_temp = "";
+                        var cur_asgd_temp = allSubgrGrData[ii][jj];
+                        var data_ind_temp = cur_asgd_temp[IND_ASGD_DATA_IND] - 1;
 
-                        if (data[allSubgrGrData[ii][jj][1] - 1][2] != "")
-                            name_temp = data[allSubgrGrData[ii][jj][1] - 1][2];
+                        if (data[data_ind_temp][2] != "")
+                            name_temp = data[data_ind_temp][2];
                         else
-                            name_temp = allSubgrGrData[ii][jj][3];
+                            name_temp = cur_asgd_temp[IND_ASGD_NAME];
 
                         if (name == name_temp)
                         {
-                            var tc_ind = allSubgrGrData[ii][jj][1] + 2000000;
-                            order_composition.push([allSubgrGrData[ii][jj][1] - 1, ii, jj, displaying_name]);
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + allSubgrGrData[ii][jj][1] + "," + allSubgrGrData[ii][jj][2] + "," + allSubgrGrData[ii][jj][0]+");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[allSubgrGrData[ii][jj][1]-1][0] + ", " + trans[13] + " " + data[allSubgrGrData[ii][jj][1]-1][1] + "</div></a>";
-//                            break;
+                            var tc_ind = cur_asgd_temp[IND_ASGD_DATA_IND] + 2000000;
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd_temp[IND_ASGD_DATA_IND] + "," + cur_asgd_temp[IND_ASGD_POSITION] + "," + cur_asgd_temp[IND_ASGD_IMG_POS] + ");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[data_ind_temp][0] + ", " + trans[13] + " " + data[data_ind_temp][1] + "</div></a>";
+                            order_composition.push([data_ind_temp, ii, jj, displaying_name]);
                         }
                         
                     }
                 }
                 buff.push(source);
-                var pos = allSubgrGrData[i][j][1] - 1;
-                tree_composition(pos, buff);
+                tree_composition(data_ind, buff);
                 buff.push("</div>");
             }
         }
