@@ -593,7 +593,7 @@ function tree_composition(par_gr, buff) {
                         else
                             name_temp = cur_asgd_temp[IND_ASGD_NAME];
 
-                        if (name == name_temp)
+                        if (name == name_temp && data[data_ind_temp][12] == par_gr)
                         {
                             var tc_ind = cur_asgd_temp[IND_ASGD_DATA_IND] + 2000000;
                             source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd_temp[IND_ASGD_DATA_IND] + "," + cur_asgd_temp[IND_ASGD_POSITION] + "," + cur_asgd_temp[IND_ASGD_IMG_POS] + ");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[data_ind_temp][0] + ", " + trans[13] + " " + data[data_ind_temp][1] + "</div></a>";
