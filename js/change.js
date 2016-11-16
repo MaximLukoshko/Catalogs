@@ -556,50 +556,44 @@ function class_tree() {
     }
 }
 
+function form_displaying_name(cur_data, cur_asgd)
+{
+    return cur_asgd[IND_ASGD_NAME] + " " + cur_data[2];
+}
 
 function tree_composition(par_gr, buff) {
     var arr = [];
-    for (var i = 0; i < allSubgrGrData.length; i++) {
-        for (var j = 0; j < allSubgrGrData[i].length; j++) {
-
+    for (var i = 0; i < allSubgrGrData.length; i++)
+    {
+        for (var j = 0; j < allSubgrGrData[i].length; j++)
+        {
             var cur_asgd = allSubgrGrData[i][j];
             var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
             var cur_data = data[data_ind];
+            var displaying_name = form_displaying_name(cur_data, cur_asgd);
 
-            var name = "";
-
-            if (cur_data[2] != "")
-                name = cur_data[2];
-            else
-                name = cur_asgd[IND_ASGD_NAME];
-
-            if (par_gr == cur_data[12] && isnotElemIn(arr, name)) {
+            if (par_gr == cur_data[12] && isnotElemIn(arr, displaying_name))
+            {
                 var m_composition = cur_asgd[IND_ASGD_DATA_IND] + 2000000;
                 var source = "";
 
-                var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + cur_data[2];
                 source += "<img id='img" + m_composition + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + data_ind + ");'><div id='li" + m_composition + "'  onClick='javascript:changeDisplay(" + m_composition + ");javascript:settables_for_item(" + data_ind + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m_composition + "' style='display:none;margin-left:15px'>";
-                arr.push(name);
+                arr.push(displaying_name);
                 for (var ii = 0; ii < allSubgrGrData.length; ii++)
                 {
                     for (var jj = 0; jj < allSubgrGrData[ii].length; jj++)
                     {
-                        var name_temp = "";
                         var cur_asgd_temp = allSubgrGrData[ii][jj];
                         var data_ind_temp = cur_asgd_temp[IND_ASGD_DATA_IND] - 1;
+                        var cur_data_temp = data[data_ind_temp];
+                        var displaying_name_temp = form_displaying_name(cur_data_temp, cur_asgd_temp);
 
-                        if (data[data_ind_temp][2] != "")
-                            name_temp = data[data_ind_temp][2];
-                        else
-                            name_temp = cur_asgd_temp[IND_ASGD_NAME];
-
-                        if (name == name_temp && data[data_ind_temp][12] == par_gr)
+                        if (displaying_name == displaying_name_temp && cur_data_temp[12] == par_gr)
                         {
                             var tc_ind = cur_asgd_temp[IND_ASGD_DATA_IND] + 2000000;
                             source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd_temp[IND_ASGD_DATA_IND] + "," + cur_asgd_temp[IND_ASGD_POSITION] + "," + cur_asgd_temp[IND_ASGD_IMG_POS] + ");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[data_ind_temp][0] + ", " + trans[13] + " " + data[data_ind_temp][1] + "</div></a>";
                             order_composition.push([data_ind_temp, ii, jj, displaying_name]);
                         }
-                        
                     }
                 }
                 buff.push(source);
