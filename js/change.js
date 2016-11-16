@@ -311,12 +311,12 @@ function setup(ul) {
 
      }  */
     var os = navigator.userAgent;
-    var osArr = ["Windows NT 5.1", "Windows NT 5.2", "Windows NT 6.1", "Windows NT 6.0"];
+/*    var osArr = ["Windows NT 5.1", "Windows NT 5.2", "Windows NT 6.1", "Windows NT 6.0"];
     var isNormalOs = false;
     for (var i = 0; i < osArr.length; i++) {
         if (os.indexOf(osArr[i]) >= 0)
             isNormalOs = true;
-    }
+    }*/
     hasIE = /*@cc_on (@_jscript_version+"").replace(/\d\./, ''); @*/
     false;
     hasOpera = !!window.opera && window.opera.version && window.opera.version();
@@ -325,11 +325,11 @@ function setup(ul) {
     hasSafari = !window.external && !hasOpera && (/safari\/([\d\.]+)/i.exec(navigator.userAgent)[1] || true);
     if (hasOpera != false || hasFireFox != false || hasSafari != false)
         alert("Корректная работа HTML-каталога обеспечиватся только для броузеров Google Chrome и Microsoft Explorer(версии 9.0 и выше). Для вашего типа броузера часть функций либо весь HTML-каталог могут неработоспособны!");
-    if (isNormalOs != true) {
+/*    if (isNormalOs != true) {
         var osver = os.substr(indexOf("Windows"), 14);
         alert("Вы используете " + osver + " и Internet Explorer" + os.substr(os.indexOf("MSIE") + 5, 3) + " Для работы с каталогом необходима операционная система Windows XP и выше, Internet Explorer 9.0 и выше");
         close();
-    }
+    }*/
     var uaVers;
     if (os.indexOf("MSIE") >= 0) {
         uaVers = os.substr(os.indexOf("MSIE") + 5, 3);
@@ -609,6 +609,7 @@ function tree_composition(par_gr, buff) {
         }
     }
 }
+
 var ss = "";
 function build_tree(codegr, codeupgr) {
     if (codegr != -1)
