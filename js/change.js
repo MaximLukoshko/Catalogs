@@ -1394,7 +1394,7 @@ function change(current, area_index, img_index, p, pp) {
                         scrollIV('tc' + current, "ulcomp");
                         current -= 2000000;
 
-                        var aa = current - (h - allSubgrGrData[t].length + 1);
+                        var aa = current - (h - allSubgrGrData[t].length);
                         var c = allSubgrGrData[t][aa][IND_ASGD_GROUP];
                         if (c != 0) {
                             var cl = allSubgrGrData[t][aa][IND_ASGD_GR_SAVED];
