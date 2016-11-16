@@ -635,9 +635,9 @@ function setmap(indx) {
         var nn = 0;
         for (var ii = 0; ii < allSubgrGrData.length; ii++)
             for (var jj = 0; jj < allSubgrGrData[ii].length; jj++) {
-                var i = allSubgrGrData[ii][jj][0];
-                var j = allSubgrGrData[ii][jj][2];
-                var c = allSubgrGrData[ii][jj][1];
+                var i = allSubgrGrData[ii][jj][IND_ASGD_IMG_POS];
+                var j = allSubgrGrData[ii][jj][IND_ASGD_POSITION];
+                var c = allSubgrGrData[ii][jj][IND_ASGD_DATA_IND];
                 if (i == indx)
                     if (i != "-1" && j != -1) {
                         var t = coords[indx][j][0];
@@ -773,7 +773,7 @@ function setCheck() {
                                 for (var t = 0; t < allSubgrGrData.length; t++) {
                                     m = allSubgrGrData[t].length - 1;
                                     if (n < m) {
-                                        ss = ss + "  " + allSubgrGrData[t][n][3] + ", ";
+//                                        ss = ss + "  " + allSubgrGrData[t][n][IND_ASGD_NAME] + ", ";
                                         data[grCoher[ii][j] - 1][isinrec - 2] = '1';
                                         data[grCoher[ii][j] - 1][isinrec - 1] = val;
                                         break;
@@ -811,13 +811,11 @@ function setCheck() {
                     var ss = "";
                     for (j = 2; j < tdList.length - 2; j++) {
                         if (j != tdList.length - 3)
+                            ss += data[countDet][j];
                             if (data[countDet][j] != "")
-                                ss = ss + data[countDet][j] + ",  ";
-                            else
-                                ss = ss + data[countDet][j];
+                                ss += ",  ";
                     }
                     s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                    ///   s=s+"<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + data[countDet][isinrec-1] + "</td>";
                     s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (isinrec - 1) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][isinrec - 1] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
                     s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
                     s = s + "</tr>";
@@ -987,7 +985,7 @@ function changeDisplay(id) {
             var k = 0;
             ii = 0;
             // while (k < allSubgrGrData[ll + i].length|| ii == "-1") ii = allSubgrGrData[ll + i][k++][0];
-            var indexx = allSubgrGrData[ll + i][0][1];
+            var indexx = allSubgrGrData[ll + i][0][IND_ASGD_DATA_IND];
             ii = numbimg(data[indexx - 1][0]);
             if (ii != jj && ii != "-1") {
                 if (cn == cwidth) {
@@ -1038,6 +1036,7 @@ function findIt(findtype)
     }
 }
 
+//find_array : [[data_index, allsubgrgrdata_i, allsubgrgrdata_j, displaying name ],...]
 function find_by_name(find_array)
 {
     var findv = document.getElementById('typef').value;
@@ -1079,7 +1078,7 @@ function find_by_name(find_array)
         {
             var asgd_i=find_array[cur_index][1];
             var asgd_j=find_array[cur_index][2];
-            change(allSubgrGrData[asgd_i][asgd_j][1], allSubgrGrData[asgd_i][asgd_j][2], allSubgrGrData[asgd_i][asgd_j][0]);
+            change(allSubgrGrData[asgd_i][asgd_j][IND_ASGD_DATA_IND], allSubgrGrData[asgd_i][asgd_j][IND_ASGD_POSITION], allSubgrGrData[asgd_i][asgd_j][IND_ASGD_IMG_POS]);
             curfind = dat_ind;
             return;
         }
@@ -1095,7 +1094,7 @@ function find_by_name(find_array)
         if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1) {
             var asgd_i = find_array[cur_index][1];
             var asgd_j = find_array[cur_index][2];
-            change(allSubgrGrData[asgd_i][asgd_j][1], allSubgrGrData[asgd_i][asgd_j][2], allSubgrGrData[asgd_i][asgd_j][0]);
+            change(allSubgrGrData[asgd_i][asgd_j][IND_ASGD_DATA_IND], allSubgrGrData[asgd_i][asgd_j][IND_ASGD_POSITION], allSubgrGrData[asgd_i][asgd_j][IND_ASGD_IMG_POS]);
             curfind = dat_ind;
             return;
         }
@@ -1396,10 +1395,10 @@ function change(current, area_index, img_index, p, pp) {
                         current -= 2000000;
 
                         var aa = current - (h - allSubgrGrData[t].length + 1);
-                        var c = allSubgrGrData[t][aa][4];
+                        var c = allSubgrGrData[t][aa][IND_ASGD_GROUP];
                         if (c != 0) {
-                            var cl = allSubgrGrData[t][aa][6];
-                            setOpen(allSubgrGrData[t][aa][7]);
+                            var cl = allSubgrGrData[t][aa][IND_ASGD_GR_SAVED];
+                            setOpen(allSubgrGrData[t][aa][IND_ASGD_CLS_ID]);
                             img = document.getElementById("img" + c);
                             if (img)
                                 img.src = "./img/minus.gif";
