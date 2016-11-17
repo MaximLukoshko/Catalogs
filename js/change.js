@@ -10,7 +10,6 @@ var sel_item = false;
 var prevfind = "";
 var gr;
 var pgr;
-var isinrec;
 var isopen = 0;
 var modify = 180;
 var aaa = 0;
@@ -156,7 +155,7 @@ function form_buff_for_item(item_ind, buff)
 {
     buff.push(item_ind);
     for (var i = 0; i < data.length; i++)
-        if (data[IND_D_TABLELENGTH + SH_D_INCCODE] == item_ind)
+        if (data[i][IND_D_TABLELENGTH + SH_D_INCCODE] == item_ind)
             form_buff_for_item(i, buff);
 }
 
@@ -306,7 +305,7 @@ function setup(ul) {
         recucle_str = recucle_str + "<div class=\"submit\" id='online' onClick=\"online();\">" + trans[2] + "</div>";
         recucle_elem.innerHTML = recucle_str;
     }
-    isinrec = data[0].length -2;
+ 
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
@@ -417,8 +416,8 @@ function fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name) {
         cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[IND_D_IMG]);
     cur_data[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
     cur_data[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
-    cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] = cur_gr_name[1] + " " + cur_gr_name[0];
-    cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] = cur_subgr_name[1] + " " + cur_subgr_name[0];
+    cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] = cur_gr_name[1] + ". " + cur_gr_name[0];
+    cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] = cur_subgr_name[1] + ". " + cur_subgr_name[0];
 }
 
 var d = 0;
@@ -448,10 +447,6 @@ function func_group(par_ind, buff) {
                 var cur_asgd = allSubgrGrData[jj][k];
                 var cur_dat_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
                 var cur_data = data[cur_dat_ind];
-                var cur_gr_name = grNames[i];
-                var cur_subgr_name = allSubgrGrNames[i][j];
-
-//                fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name);
 
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
@@ -540,7 +535,7 @@ function class_tree() {
             for (var k = 0; k < allSubgrGrData[jj].length; k++)
             {
                 var cur_asgd = allSubgrGrData[jj][k];
-                if (grClassify[n][0] == cur_asgd[4]) {
+                if (grClassify[n][0] == cur_asgd[IND_ASGD_GR_CLS_CODE]) {
                     var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
                     var cur_data = data[data_ind];
                     var s = form_displaying_name(cur_data);
@@ -1407,6 +1402,8 @@ function change(current, area_index, img_index, p, pp) {
     } else {
         var table = document.getElementById('tablID');
         var trList = table.getElementsByTagName('tr');
+        var group = document.getElementById('group');
+        group.innerHTML = "<div class=\"hh2\"></div><div class=\"hh3\"></div>";
         if (trList.length > 1)
         {
             var tdListName = trList[1].getElementsByTagName('td');
@@ -1818,28 +1815,23 @@ function exportRecToCsv(filename, rows) {
     var trList = table.getElementsByTagName('tr');
     var tdList = trList[0].getElementsByTagName('td');
 
-    var csvFile = ""//'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Кол-во в корзине\n';
+    var csvFile = "";
+    csvFile += trans[0] + ";" + trans[1] + ";";
     for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
         if(j!=IND_D_TABLELENGTH+SH_D_QUANT_TO_ADD_TO_REC)
             csvFile += tdList[j].innerHTML + ";";
     csvFile += "\n";
 
     for (var i = 0; i < data.length; i++) {
-        if (data[i][IND_D_TABLELENGTH+SH_D_QUANT_AT_RECYCLE] > 0) {
+        var cur_data = data[i];
+        if (cur_data[IND_D_TABLELENGTH+SH_D_QUANT_AT_RECYCLE] > 0) {
+
+            csvFile += cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] + ";" + cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] + ";";
 
             for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
                 if (j != IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC)
-                    csvFile += data[i][j] + ";";
+                    csvFile += cur_data[j] + ";";
             csvFile += "\n"
-
-/*            for (j = 2; j < tdList.length - 2; j++)
-                csvFile = csvFile + data[i][j] + ";";
-
-            csvFile = csvFile + data[i][8] + ";";
-            csvFile = csvFile + data[i][9] + ";";
-            csvFile = csvFile + data[i][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + ";";
-
-            csvFile += "\n";*/
         }
     }
 
