@@ -42,6 +42,28 @@ var IND_ASGD_SOME_CODE    =  5; // Какой-то код. (SupplyCode)
 var IND_ASGD_GR_SAVED     =  6; // После замены IND_ASGD_GR_CLS_CODE на id элемента в классификаторе сюда записывается сохранённый IND_ASGD_GR_CLS_CODE
 var IND_ASGD_CLS_ID       =  7; // Если элемент есть в классификаторе, то сюда записывается id раздела, внутри которого содержатся рисунки элемента
 
+// Предопределённые индексы для массива data
+var IND_D_IMG          =  0; // Номер картинки
+var IND_D_POSITION     =  1; // Позиция элемента на рисунке
+var IND_D_SIGN         =  2; // Обозначение
+var IND_D_NAME         =  3; // Наименование
+var IND_D_WEIGHT       =  4; // Масса
+var IND_D_COHERED_TO   =  5; // Связность
+
+// Плавающая переменная. Её значение изменяется в зависимости от количества колонок в таблице
+var IND_D_TABLELENGTH  = -1; 
+
+// Предопределённые смещения для массива data относительно позиции IND_D_TABLELENGTH
+// SH = SHIFT
+var SH_D_QUANT_TO_ADD_TO_REC = -2; // Количество элементов для добавления в корзину
+var SH_D_QUANTITY_AT_RECYCLE = -1; // Количество в корзине
+var SH_D_ITEMCODE            =  0; // Код элемента
+var SH_D_INCCODE             =  1; // Код входимости
+var SH_D_GROUP_FULL_NAME     =  2; // Полное название группы
+var SH_D_SUBGROUP_FULL_NAME  =  3; // Полное название подгруппы
+
+
+
 //Переменные для поиска
 var curfind = -1;
 var find_direction = 1;
