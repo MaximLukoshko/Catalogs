@@ -26,7 +26,6 @@ var v = 1;
 var func_groups_showed = 0;
 var classifier_showed = 0;
 var tree_comp_showed = 0;
-var tablelenth = 0;
 var countinrec = 0;
 var previd = "";
 var findsize = 100;
@@ -168,7 +167,7 @@ function form_table_by_array(ind_array) {
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
     var s = '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
-    for (var j = 1; j < tablelenth; j++)
+    for (var j = 1; j < IND_D_TABLELENGTH; j++)
         s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
     s = '<tr>' + s + '</tr>';
     for (var i = 0; i < ind_array.length; i++) {
@@ -178,15 +177,15 @@ function form_table_by_array(ind_array) {
         detsort[i] = cur_ind;
 
         s = s + '<tr>';
-        for (var m = 0; m < tablelenth; m++) {
+        for (var m = 0; m < IND_D_TABLELENGTH; m++) {
             var r = '';
-            if (m < tablelenth - 2) {
+            if (m < IND_D_TABLELENGTH - 2) {
                 r = dat[m];
             } else {
-                if (m == tablelenth - 2) {
+                if (m == IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC) {
                     r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\">";
                 }
-                if (m == tablelenth - 1)
+                if (m == IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE)
                     r = "<div id='t" + cur_ind + "'>" + dat[isinrec - 1] + "</div>";
             }
             s = s + '<td>' + r + '</td>';
@@ -290,12 +289,6 @@ function setup(ul) {
         selarr[t] = -1;
         t++;
     }
-    var gr = document.getElementById("group");
-    var t = document.getElementById("tablID");
-    var ulsc = document.getElementById("ulclassify");
-    var h1 = gr.offsetHeight;
-    var h2 = t.offsetHeight;
-    ulsc.style.height = h1 + h2 + "px";
     var ff = document.getElementById("space");
     var ffs = "";
     for (var i = 0; i < 10; i++) {
@@ -317,7 +310,25 @@ function setup(ul) {
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
-    tablelenth = tdListName.length;
+    IND_D_TABLELENGTH = tdListName.length;
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var asgd_ind = 0;
+    for (var i = 0; i < grNames.length; i++) {
+        for (var j = 0; j < allSubgrGrNames[i].length; j++) {
+            for (var k = 0; k < allSubgrGrData[asgd_ind].length; k++) {
+                var cur_asgd = allSubgrGrData[asgd_ind][k];
+                var cur_dat_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
+                var cur_data = data[cur_dat_ind];
+                var cur_gr_name = grNames[i];
+                var cur_subgr_name = allSubgrGrNames[i][j];
+
+                fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name);
+            }
+            asgd_ind++;
+        }
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Проверяем, в каком браузере открывается страница
@@ -329,14 +340,13 @@ function setup(ul) {
     hasSafari = !window.external && !hasOpera && (/safari\/([\d\.]+)/i.exec(navigator.userAgent)[1] || true);
     if (hasOpera != false || hasFireFox != false || hasSafari != false)
         alert("Корректная работа HTML-каталога обеспечиватся только для броузеров Google Chrome и Microsoft Explorer(версии 9.0 и выше). Для вашего типа броузера часть функций либо весь HTML-каталог могут неработоспособны!");
-    var uaVers;
+
     if (os.indexOf("MSIE") >= 0) {
-        uaVers = os.substr(os.indexOf("MSIE") + 5, 3);
+        var uaVers = os.substr(os.indexOf("MSIE") + 5, 3);
         if (uaVers.charAt(0) < '9' && uaVers.charAt(1) == '.') {
             alert('Вы используете устаревшую версию Internet Explorer, необходима версия 9.0 и выше');
             close();
         }
-        ;
     }
 
 
@@ -397,16 +407,18 @@ function setup(ul) {
     showclassify();
     showclass();
 
-    doResizeCode()
+    change(-1, -1, -1, '', -1);
+
+    doResizeCode();
 }
 
 function fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
         cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[IND_D_IMG]);
     cur_data[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
-    cur_data[isinrec - 1] = 0;
-    cur_data[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
-    cur_data[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
+    cur_data[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
+    cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] = cur_gr_name[1] + " " + cur_gr_name[0];
+    cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] = cur_subgr_name[1] + " " + cur_subgr_name[0];
 }
 
 var d = 0;
@@ -439,7 +451,7 @@ function func_group(par_ind, buff) {
                 var cur_gr_name = grNames[i];
                 var cur_subgr_name = allSubgrGrNames[i][j];
 
-                fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name);
+//                fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name);
 
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
@@ -715,7 +727,7 @@ function setToolTip(numbdetal, note) {
     var aa = numbdetal + findsize;
     if (aa >= data.length)
         aa = data.length;
-    for (j = 0; j < tablelenth - 1; j++) {
+    for (j = 0; j < IND_D_TABLELENGTH; j++) {
         if (tdListName[j].innerText == trans[7])
             kk = j;
         if (tdListName[j].innerText == trans[8])
@@ -1370,7 +1382,7 @@ function change(current, area_index, img_index, p, pp) {
                         scrollIV('tc' + current, "ulcomp");
                         current -= 2000000;
 
-                        var aa = current - (h - allSubgrGrData[t].length);
+                        var aa = current - (h - allSubgrGrData[t].length) - 1;
                         var c = allSubgrGrData[t][aa][IND_ASGD_GR_CLS_CODE];
                         if (c != 0) {
                             var cl = allSubgrGrData[t][aa][IND_ASGD_GR_SAVED];
@@ -1406,9 +1418,12 @@ function change(current, area_index, img_index, p, pp) {
     } else {
         var table = document.getElementById('tablID');
         var trList = table.getElementsByTagName('tr');
-        var tdListName = trList[1].getElementsByTagName('td');
-        for (j = 0; j < tablelenth - 1 - 1; j++)
-            tdListName[j].innerHTML = "";
+        if (trList.length > 1)
+        {
+            var tdListName = trList[1].getElementsByTagName('td');
+            for (j = 0; j < IND_D_TABLELENGTH; j++)
+                tdListName[j].innerHTML = "";
+        }
         boxVisible(-1, -1, true, true);
         setcolored(-1);
     }
