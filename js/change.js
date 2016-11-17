@@ -23,23 +23,24 @@ var detsort = new Array(100);
 var curimg = -1;
 var curpos = 0;
 var v = 1;
-var showcls = 0;
-var showcls2 = 0;
-var showcls3 = 0;
+var func_groups_showed = 0;
+var classifier_showed = 0;
+var tree_comp_showed = 0;
 var tablelenth = 0;
 var countinrec = 0;
 var previd = "";
 var findsize = 100;
 
 // Переменные-индексы
-var IND_ASGD_IMG_POS  = 0;
-var IND_ASGD_DATA_IND = 1;
-var IND_ASGD_POSITION = 2;
-var IND_ASGD_NAME     = 3;
-var IND_ASGD_GROUP    = 4;
-var IND_ASGD_SOME_CODE = 5;
-var IND_ASGD_GR_SAVED = 6;
-var IND_ASGD_CLS_ID   = 7;
+// Предопределённые индексы для массива allSubgrGrData
+var IND_ASGD_IMG_POS      =  0; // Позиция рисунка в массиве imgArray
+var IND_ASGD_DATA_IND     =  1; // Позиция элемента в массиве data
+var IND_ASGD_POSITION     =  2; // Позиция элемента на рисунке
+var IND_ASGD_NAME         =  3; // Наименование
+var IND_ASGD_GR_CLS_CODE  =  4; // Код группы (не равен нулю, если элемент есть в классификаторе). Позже заменяется на id элемента в классификаторе
+var IND_ASGD_SOME_CODE    =  5; // Какой-то код. (SupplyCode)
+var IND_ASGD_GR_SAVED     =  6; // После замены IND_ASGD_GR_CLS_CODE на id элемента в классификаторе сюда записывается сохранённый IND_ASGD_GR_CLS_CODE
+var IND_ASGD_CLS_ID       =  7; // Если элемент есть в классификаторе, то сюда записывается id раздела, внутри которого содержатся рисунки элемента
 
 //Переменные для поиска
 var curfind = -1;
@@ -498,7 +499,7 @@ function class_tree() {
         for (var jj = 0; jj < allSubgrGrData.length; jj++)
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
                 var cur_asgd = allSubgrGrData[jj][k];
-                if (grClassify[n][0] == cur_asgd[IND_ASGD_GROUP])
+                if (grClassify[n][0] == cur_asgd[IND_ASGD_GR_CLS_CODE])
                 {
                     var s;
                     var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
@@ -543,9 +544,9 @@ function class_tree() {
                                 var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + data[data_ind][2];
                                 order_classify.push([data_ind, jj, k, displaying_name]);
                                 v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[data_ind][0] + ", " + trans[13] + " " + data[data_ind][1] + "</div></a>";
-                                cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GROUP];
+                                cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GR_CLS_CODE];
                                 cur_asgd[IND_ASGD_CLS_ID] = m;
-                                cur_asgd[IND_ASGD_GROUP] = bol;
+                                cur_asgd[IND_ASGD_GR_CLS_CODE] = bol;
                             }
                             bol++;
                         }
@@ -1017,21 +1018,21 @@ function findIt(findtype)
     if (findtype == 0)
     {
         find_by_name(order_funcgroups);
-        if (showcls == 1)
+        if (func_groups_showed == 1)
             showclass();
     }
 
     if (findtype == 1)
     {
         find_by_name(order_composition);
-        if (showcls3 == 1)
+        if (tree_comp_showed == 1)
             showcomposition();
     }
 
     if (findtype == 2)
     {
         find_by_name(order_classify);
-        if (showcls2 == 1)
+        if (classifier_showed == 1)
             showclassify();
     }
 }
@@ -1233,28 +1234,28 @@ function open_tree(codegr, codeupgr) {
 }
 function showclassify() {
     var img = document.getElementById('classifimg');
-    if (showcls2 == 1) {
+    if (classifier_showed == 1) {
         img.src = "./img/minusbig.gif";
         var gr = document.getElementById("group");
         var t = document.getElementById("tablID");
         var uls = document.getElementById("ulclassify");
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
-        if (showcls == 1 && showcls3 == 1)
+        if (func_groups_showed == 1 && tree_comp_showed == 1)
             uls.style.height = document.body.clientHeight - 160 + "px";
         else
             uls.style.height = h1 + h2 + "px";
-        showcls2 = 0;
+        classifier_showed = 0;
     } else {
         var uls = document.getElementById("ulclassify");
         uls.style.height = "0px";
         img.src = "./img/plusbig.gif";
-        showcls2 = 1;
+        classifier_showed = 1;
     }
 }
 function showclass() {
     var img = document.getElementById('classimg');
-    if (showcls == 1) {
+    if (func_groups_showed == 1) {
         img.src = "./img/minusbig.gif";
         var imgD = document.getElementById("imgD");
         var uls = document.getElementById("uls");
@@ -1263,25 +1264,25 @@ function showclass() {
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
         var ulsc = document.getElementById("ulclassify");
-        if (showcls3 == 0)
+        if (tree_comp_showed == 0)
             showcomposition();
-        if (showcls2 == 0)
+        if (classifier_showed == 0)
             ulsc.style.height = h1 + h2 + "px";
         uls.style.height = document.body.clientHeight - 310 + "px";
-        showcls = 0;
+        func_groups_showed = 0;
     } else {
         var uls = document.getElementById("uls");
         uls.style.height = "0px";
         var ulsc = document.getElementById("ulclassify");
-        if (showcls2 == 0)
+        if (classifier_showed == 0)
             ulsc.style.height = document.body.clientHeight - 165 + "px";
         img.src = "./img/plusbig.gif";
-        showcls = 1;
+        func_groups_showed = 1;
     }
 }
 function showcomposition() {
     var img = document.getElementById('classcompimg');
-    if (showcls3 == 1) {
+    if (tree_comp_showed == 1) {
         img.src = "./img/minusbig.gif";
         var imgD = document.getElementById("imgD");
         var ulcomp = document.getElementById("ulcomp");
@@ -1290,20 +1291,20 @@ function showcomposition() {
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
         var ulsc = document.getElementById("ulclassify");
-        if (showcls == 0)
+        if (func_groups_showed == 0)
             showclass();
-        if (showcls2 == 0)
+        if (classifier_showed == 0)
             ulsc.style.height = h1 + h2 + "px";
         ulcomp.style.height = document.body.clientHeight - 310 + "px";
-        showcls3 = 0;
+        tree_comp_showed = 0;
     } else {
         var ulcomp = document.getElementById("ulcomp");
         ulcomp.style.height = "0px";
         var ulsc = document.getElementById("ulclassify");
-        if (showcls2 == 0)
+        if (classifier_showed == 0)
             ulsc.style.height = document.body.clientHeight - 165 + "px";
         img.src = "./img/plusbig.gif";
-        showcls3 = 1;
+        tree_comp_showed = 1;
     }
 }
 function change(current, area_index, img_index, p, pp) {
@@ -1395,7 +1396,7 @@ function change(current, area_index, img_index, p, pp) {
                         current -= 2000000;
 
                         var aa = current - (h - allSubgrGrData[t].length);
-                        var c = allSubgrGrData[t][aa][IND_ASGD_GROUP];
+                        var c = allSubgrGrData[t][aa][IND_ASGD_GR_CLS_CODE];
                         if (c != 0) {
                             var cl = allSubgrGrData[t][aa][IND_ASGD_GR_SAVED];
                             setOpen(allSubgrGrData[t][aa][IND_ASGD_CLS_ID]);
@@ -1845,19 +1846,19 @@ function doResizeCode() {
     var uls = document.getElementById("uls");
     var ulcomp = document.getElementById("ulcomp");
 
-    if (showcls == 0 && showcls3 == 1)
+    if (func_groups_showed == 0 && tree_comp_showed == 1)
         uls.style.height = document.body.clientHeight - 310 + "px";
-    else if (showcls3 == 0 && showcls == 1)
+    else if (tree_comp_showed == 0 && func_groups_showed == 1)
         ulcomp.style.height = document.body.clientHeight - 310 + "px";
 
-    if (showcls2 == 0)
+    if (classifier_showed == 0)
     {
         var gr = document.getElementById("group");
         var t = document.getElementById("tablID");
         var h1 = gr.offsetHeight;
         var h2 = t.offsetHeight;
         var ulsc = document.getElementById("ulclassify");
-        var show_cls = showcls==1 && showcls3==1;
+        var show_cls = func_groups_showed==1 && tree_comp_showed==1;
         if (show_cls == 1)
             ulsc.style.height = document.body.clientHeight - 160 + "px";
         else
