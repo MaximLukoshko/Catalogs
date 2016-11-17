@@ -186,7 +186,7 @@ function form_table_by_array(ind_array) {
                     r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\">";
                 }
                 if (m == IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE)
-                    r = "<div id='t" + cur_ind + "'>" + dat[isinrec - 1] + "</div>";
+                    r = "<div id='t" + cur_ind + "'>" + dat[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "</div>";
             }
             s = s + '<td>' + r + '</td>';
         }
@@ -223,7 +223,7 @@ function endedit(ii, j) {
     dd = document.getElementById('t' + ii);
     if (dd != null)
         dd.innerHTML = c;
-    data[ii][j] = c;
+    data[ii][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = c;
 }
 
 function openRecucle(ii) {
@@ -254,7 +254,7 @@ function openRecucle(ii) {
         var countDet = 0;
         countinrec = 0;
         while (countDet < colbolts - 1) {
-            if (data[countDet][isinrec - 2] == '1') {
+            if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] >0) {
                 countinrec++;
                 s = s + "<tr >";
                 var ss = "";
@@ -266,7 +266,7 @@ function openRecucle(ii) {
                             ss = ss + data[countDet][j];
                 }
                 s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (isinrec - 1) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][isinrec - 1] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
+                s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
                 s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
                 s = s + "</tr>";
             }
@@ -769,13 +769,12 @@ function setCheck() {
         while (dettorec[l] != -1) {
             var cc = document.getElementById("count" + detsort[l]);
             if (cc != null && cc.value != 0) {
-                data[detsort[l]][isinrec - 2] = '1';
-                data[detsort[l]][isinrec - 1] = cc.value;
+                data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = cc.value;
                 var a = 0;
                 var v = document.getElementById("t" + detsort[l]);
                 v.innerHTML = cc.value;
                 if (cc.value == '')
-                    data[detsort[l]][isinrec - 1] = 0;
+                    data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
                 val = cc.value;
                 cc.value = 0;
                 var msg = "Добавлен в корзину";
@@ -792,9 +791,7 @@ function setCheck() {
                                 for (var t = 0; t < allSubgrGrData.length; t++) {
                                     m = allSubgrGrData[t].length - 1;
                                     if (n < m) {
-//                                        ss = ss + "  " + allSubgrGrData[t][n][IND_ASGD_NAME] + ", ";
-                                        data[grCoher[ii][j] - 1][isinrec - 2] = '1';
-                                        data[grCoher[ii][j] - 1][isinrec - 1] = val;
+                                        data[grCoher[ii][j] - 1][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = val;
                                         break;
                                     } else
                                         n -= m;
@@ -824,7 +821,7 @@ function setCheck() {
             countDet = 0;
             countinrec = 0;
             while (countDet < colbolts - 1) {
-                if (data[countDet][isinrec - 2] == '1') {
+                if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE]  > 0) {
                     countinrec++;
                     s = s + "<tr >";
                     var ss = "";
@@ -835,7 +832,7 @@ function setCheck() {
                                 ss += ",  ";
                     }
                     s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (isinrec - 1) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][isinrec - 1] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
+                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
                     s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
                     s = s + "</tr>";
                 }
@@ -855,8 +852,7 @@ function setunCheck(i) {
         var v = document.getElementById("t" + i);
         if (v != null)
             v.innerHTML = 0;
-        data[i][isinrec - 1] = '0';
-        data[i][isinrec - 2] = '0';
+        data[i][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = '0';
         if (isopen == 1) {
             s = s + "<div id='recle' class='fgr'>";
             s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
@@ -867,9 +863,6 @@ function setunCheck(i) {
             var table = document.getElementById('tablID');
             var trList = table.getElementsByTagName('tr');
             var tdList = trList[0].getElementsByTagName('td');
-            // for (j = 2; j < tdList.length - 2; j++) {
-            //       s=s+"<td class='h'>" + tdList[j].innerHTML + "</td>";
-            // }
             s = s + "<td class='h'>" + trans[4] + "</td>";
             s = s + "<td class='h'>" + trans[5] + "</td>";
             s = s + "<td class='h'>" + trans[6] + "</td>";
@@ -877,12 +870,9 @@ function setunCheck(i) {
             countDet = 0;
             countinrec = 0;
             while (countDet < colbolts - 1) {
-                if (data[countDet][isinrec - 2] == '1') {
+                if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] > 0) {
                     countinrec++;
                     s = s + "<tr >";
-                    // for (j = 2; j < tdList.length - 2; j++) {
-                    //       s=s+"<td  style='font: 11px Arial;color: #000000;'>" + data[countDet][j] + "</td>";
-                    // }
                     var ss = "";
                     for (j = 2; j < tdList.length - 2; j++) {
                         if (j != tdList.length - 3)
@@ -892,8 +882,7 @@ function setunCheck(i) {
                                 ss = ss + data[countDet][j];
                     }
                     s = s + "<td style='font: 11px Tahoma;color: #000000;border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                    ///  s = s + "<td  style='font: 11px Tahoma;color: #000000;border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + data[countDet][isinrec - 1] + "</td>";
-                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (isinrec - 1) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][isinrec - 1] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
+                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
                     s = s + "<td  style='font: 11px Tahoma;color: #000000;border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
                     s = s + "</tr>";
                 }
@@ -1829,18 +1818,28 @@ function exportRecToCsv(filename, rows) {
     var trList = table.getElementsByTagName('tr');
     var tdList = trList[0].getElementsByTagName('td');
 
-    var csvFile = 'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Кол-во в корзине\n';
-    for (var i = 0; i < data.length; i++) {
-        if (data[i][isinrec - 2] == '1') {
+    var csvFile = ""//'Обозначение;Наименование;Масса;Примечание;Связан с элементами;Кол-во в корзине\n';
+    for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
+        if(j!=IND_D_TABLELENGTH+SH_D_QUANT_TO_ADD_TO_REC)
+            csvFile += tdList[j].innerHTML + ";";
+    csvFile += "\n";
 
-            for (j = 2; j < tdList.length - 2; j++)
+    for (var i = 0; i < data.length; i++) {
+        if (data[i][IND_D_TABLELENGTH+SH_D_QUANT_AT_RECYCLE] > 0) {
+
+            for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
+                if (j != IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC)
+                    csvFile += data[i][j] + ";";
+            csvFile += "\n"
+
+/*            for (j = 2; j < tdList.length - 2; j++)
                 csvFile = csvFile + data[i][j] + ";";
 
             csvFile = csvFile + data[i][8] + ";";
             csvFile = csvFile + data[i][9] + ";";
-            csvFile = csvFile + data[i][isinrec - 1] + ";";
+            csvFile = csvFile + data[i][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + ";";
 
-            csvFile += "\n";
+            csvFile += "\n";*/
         }
     }
 
