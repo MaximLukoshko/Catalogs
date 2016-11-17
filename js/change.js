@@ -157,7 +157,7 @@ function form_buff_for_item(item_ind, buff)
 {
     buff.push(item_ind);
     for (var i = 0; i < data.length; i++)
-        if (data[i][12] == item_ind)
+        if (data[IND_D_TABLELENGTH + SH_D_INCCODE] == item_ind)
             form_buff_for_item(i, buff);
 }
 
@@ -267,7 +267,6 @@ function openRecucle(ii) {
                             ss = ss + data[countDet][j];
                 }
                 s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                //  s=s+"<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + data[countDet][isinrec-1] + "</td>";
                 s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (isinrec - 1) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][isinrec - 1] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
                 s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
                 s = s + "</tr>";
@@ -283,12 +282,8 @@ function openRecucle(ii) {
 }
 
 function setup(ul) {
-    // var imageDiv = document.getElementById("mainImage");
     document.show.src = "./img/back_img.jpg";
     document.show.style.width = '600px';
-    //document.show.style.position='absolute';
-    //document.show.style.left='200px';
-    //document.show.style.top='50px';
     var t = 0;
     while (t < selarr.length) {
         prevselarr[t] = -1;
@@ -368,13 +363,13 @@ function setup(ul) {
         var index = -1;
         for (var j = 0; j < data.length ; j++)
         {
-            if(data[i][12]==data[j][11])
+            if (data[i][IND_D_TABLELENGTH + SH_D_INCCODE] == data[j][IND_D_TABLELENGTH + SH_D_ITEMCODE])
             {
                 index = j;
                 break;
             }
         }
-        data[i][12] = index;
+        data[i][IND_D_TABLELENGTH + SH_D_INCCODE] = index;
     }
 
     tree_composition(-1, buff);
@@ -392,13 +387,13 @@ function setup(ul) {
     doResizeCode()
 }
 
-function fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name) {
+function fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
-        cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_dat[0]);
-    cur_dat[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
-    cur_dat[isinrec - 1] = 0;
-    cur_dat[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
-    cur_dat[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
+        cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[0]);
+    cur_data[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
+    cur_data[isinrec - 1] = 0;
+    cur_data[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
+    cur_data[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
 }
 
 var d = 0;
@@ -427,11 +422,11 @@ function func_group(par_ind, buff) {
 
                 var cur_asgd = allSubgrGrData[jj][k];
                 var cur_dat_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
-                var cur_dat = data[cur_dat_ind];
+                var cur_data = data[cur_dat_ind];
                 var cur_gr_name = grNames[i];
                 var cur_subgr_name = allSubgrGrNames[i][j];
 
-                fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name);
+                fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name);
 
                 var img_pos = -1;
                 //Позиция изображения для данного элемента
@@ -441,11 +436,7 @@ function func_group(par_ind, buff) {
                         break;
                     }
 
-                var ss = "";
-                if (cur_asgd[IND_ASGD_SOME_CODE] != 0 && cur_asgd[IND_ASGD_NAME] != cur_dat[2])
-                    ss = " " + cur_dat[2];
-
-                var displaying_name = cur_asgd[IND_ASGD_NAME] + ss;
+                var displaying_name = form_displaying_name(cur_data);
 
                 group_content += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'>";
 
@@ -455,7 +446,7 @@ function func_group(par_ind, buff) {
                 group_content += "<a onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");'><div  class='bolt' id='" + cur_asgd[IND_ASGD_DATA_IND] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + displaying_name + "</div></a>";
 
                 if (img_pos != -1)
-                    group_content += "<img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + cur_asgd[IND_ASGD_NAME] + " " + cur_dat[2] + "');\"></div>";
+                    group_content += "<img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + cur_asgd[IND_ASGD_NAME] + " " + cur_data[2] + "');\"></div>";
 
                 order_funcgroups.push([cur_asgd[IND_ASGD_DATA_IND] - 1, jj, k, displaying_name]);
                 d++;
@@ -504,13 +495,8 @@ function class_tree() {
                 var cur_asgd = allSubgrGrData[jj][k];
                 if (grClassify[n][0] == cur_asgd[IND_ASGD_GR_CLS_CODE])
                 {
-                    var s;
                     var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
-
-                    if (data[data_ind][2] != "")
-                        s = data[data_ind][2];
-                    else
-                        s = cur_asgd[IND_ASGD_NAME];
+                    var s = form_displaying_name(data[data_ind]);
 
                     if (v && isnotElemIn(mas, s)) {
                         var m = p + 1000000;
@@ -531,22 +517,22 @@ function class_tree() {
                 var cur_asgd = allSubgrGrData[jj][k];
                 if (grClassify[n][0] == cur_asgd[4]) {
                     var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
-                    var s;
-                    if (data[data_ind][2] != "")
-                        s = data[data_ind][2];
-                    else
-                        s = cur_asgd[IND_ASGD_NAME];
+                    var cur_data = data[data_ind];
+                    var s = form_displaying_name(cur_data);
+
                     for (var d = 0; d < mas.length; d++) {
                         if (mas[d] == s) {
                             var m = d + 1000000;
                             v = document.getElementById("ul" + m);
                             if (v) {
-                                if (data[data_ind][1] == "")
-                                    cur_asgd[IND_ASGD_IMG_POS] = numbimg(data[data_ind][0]);
+                                if (cur_data[IND_D_POSITION] == "")
+                                    cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[IND_D_IMG]);
+
                                 var tr_comp_id = cur_asgd[IND_ASGD_DATA_IND] + 2000000;
-                                var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + data[data_ind][2];
+                                var displaying_name = form_displaying_name(cur_data);
                                 order_classify.push([data_ind, jj, k, displaying_name]);
-                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + data[data_ind][0] + ", " + trans[13] + " " + data[data_ind][1] + "</div></a>";
+
+                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + cur_data[0] + ", " + trans[13] + " " + cur_data[1] + "</div></a>";
                                 cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GR_CLS_CODE];
                                 cur_asgd[IND_ASGD_CLS_ID] = m;
                                 cur_asgd[IND_ASGD_GR_CLS_CODE] = bol;
@@ -574,9 +560,9 @@ function tree_composition(par_gr, buff) {
             var cur_asgd = allSubgrGrData[i][j];
             var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
             var cur_data = data[data_ind];
-            var displaying_name = form_displaying_name(cur_data/*, cur_asgd*/);
+            var displaying_name = form_displaying_name(cur_data);
 
-            if (par_gr == cur_data[12] && isnotElemIn(arr, displaying_name))
+            if (par_gr == cur_data[IND_D_TABLELENGTH + SH_D_INCCODE] && isnotElemIn(arr, displaying_name))
             {
                 var m_composition = cur_asgd[IND_ASGD_DATA_IND] + 2000000;
                 var source = "";
@@ -590,12 +576,12 @@ function tree_composition(par_gr, buff) {
                         var cur_asgd_temp = allSubgrGrData[ii][jj];
                         var data_ind_temp = cur_asgd_temp[IND_ASGD_DATA_IND] - 1;
                         var cur_data_temp = data[data_ind_temp];
-                        var displaying_name_temp = form_displaying_name(cur_data_temp/*, cur_asgd_temp*/);
+                        var displaying_name_temp = form_displaying_name(cur_data_temp);
 
-                        if (displaying_name == displaying_name_temp && cur_data_temp[12] == par_gr)
+                        if (displaying_name == displaying_name_temp && cur_data_temp[IND_D_TABLELENGTH + SH_D_INCCODE] == par_gr)
                         {
                             var tc_ind = cur_asgd_temp[IND_ASGD_DATA_IND] + 2000000;
-                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd_temp[IND_ASGD_DATA_IND] + "," + cur_asgd_temp[IND_ASGD_POSITION] + "," + cur_asgd_temp[IND_ASGD_IMG_POS] + ");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + data[data_ind_temp][0] + ", " + trans[13] + " " + data[data_ind_temp][1] + "</div></a>";
+                            source += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd_temp[IND_ASGD_DATA_IND] + "," + cur_asgd_temp[IND_ASGD_POSITION] + "," + cur_asgd_temp[IND_ASGD_IMG_POS] + ");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='tc" + tc_ind + "'>" + trans[12] + " " + cur_data_temp[IND_D_IMG] + ", " + trans[13] + " " + cur_data_temp[IND_D_POSITION] + "</div></a>";
                             order_composition.push([data_ind_temp, ii, jj, displaying_name]);
                         }
                     }
