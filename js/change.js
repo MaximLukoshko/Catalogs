@@ -56,7 +56,7 @@ var IND_D_TABLELENGTH  = -1;
 // Предопределённые смещения для массива data относительно позиции IND_D_TABLELENGTH
 // SH = SHIFT
 var SH_D_QUANT_TO_ADD_TO_REC = -2; // Количество элементов для добавления в корзину
-var SH_D_QUANTITY_AT_RECYCLE = -1; // Количество в корзине
+var SH_D_QUANT_AT_RECYCLE    = -1; // Количество в корзине
 var SH_D_ITEMCODE            =  0; // Код элемента
 var SH_D_INCCODE             =  1; // Код входимости
 var SH_D_GROUP_FULL_NAME     =  2; // Полное название группы
@@ -72,10 +72,11 @@ var order_composition = [];
 var order_classify = [];
 
 function online() { }
+
 function changetypef(f) {
-    //findtype = f;
     find_direction = f;
 }
+
 function isgetdetal(j) {
     for (var i = 0; i < allSubgrGrData[j].length; i++) {
         if (allSubgrGrData[j][i][IND_ASGD_POSITION] != '-1')
@@ -83,6 +84,7 @@ function isgetdetal(j) {
     }
     return false;
 }
+
 function sSort(i, ii) {
     // По картинке (возрастание)
     if (i[0] > ii[0])
@@ -141,7 +143,7 @@ function form_buff_for_group(gr_ind, buff)
 
 function settables_for_item(i) {
     var group = document.getElementById('group');
-    var item_name = data[i][2] != "" ? data[i][2] : data[i][3];
+    var item_name = form_displaying_name(data[i]);
     group.innerHTML = "<div class=\"hh2\">" +  "</div>" + "<div class=\"hh3\">" + item_name + "</div>";
 
     var buff = [];
@@ -214,6 +216,7 @@ function numbimg(i) {
     }
     return -1;
 }
+
 function endedit(ii, j) {
     var dd = document.getElementById('countrec' + ii);
     var c = dd.value;
@@ -222,6 +225,7 @@ function endedit(ii, j) {
         dd.innerHTML = c;
     data[ii][j] = c;
 }
+
 function openRecucle(ii) {
     var dd = document.getElementById("recucle");
     var s = "";
@@ -231,7 +235,6 @@ function openRecucle(ii) {
         s = s + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
-        //s = s +"<div class=\"submit\" id='exel'  onClick=\"newXLS();\">"+ trans[3] +"</div>";    
         modify = 180;
         isopen = 0;
     } else {
@@ -240,7 +243,6 @@ function openRecucle(ii) {
         s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
-        //s = s +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";
         s = s + "<div class='rectable'><table style=\"width:99%;position:relative;left:5px;top:10px;\">";
         var table = document.getElementById('tablID');
         var trList = table.getElementsByTagName('tr');
@@ -278,6 +280,7 @@ function openRecucle(ii) {
     dd.innerHTML = s;
     doResizeCode();
 }
+
 function setup(ul) {
     // var imageDiv = document.getElementById("mainImage");
     document.show.src = "./img/back_img.jpg";
@@ -309,11 +312,9 @@ function setup(ul) {
         var recucle_elem = document.getElementById("recucle");
         recucle_str = recucle_str + "<div id='recle' class='fgr'>";
         recucle_str = recucle_str + "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
-        //recucle_str =recucle_str+ "<img name='l2' id='dawn' src='./img/dawn.gif' class='dawn' onClick='openRecucle(0);'>"; 
         recucle_str = recucle_str + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
         recucle_str = recucle_str + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         recucle_str = recucle_str + "<div class=\"submit\" id='online' onClick=\"online();\">" + trans[2] + "</div>";
-        //recucle_str = recucle_str +"<div class=\"submit\" id='exel' onClick=\"newXLS();\">"+ trans[3] +"</div>";  
         recucle_elem.innerHTML = recucle_str;
     }
     isinrec = data[0].length -2;
@@ -321,38 +322,15 @@ function setup(ul) {
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
     tablelenth = tdListName.length;
-    /* for (j = 0; j < tablelenth - 2; j++) {
-        var ss = '';
 
-   
-
-        if (tdListName[j].innerText== trans[0])
-             gr=j;
-   
-        if (tdListName[j].innerText == trans[1])
-	    pgr=j;
-
-     }  */
     var os = navigator.userAgent;
-/*    var osArr = ["Windows NT 5.1", "Windows NT 5.2", "Windows NT 6.1", "Windows NT 6.0"];
-    var isNormalOs = false;
-    for (var i = 0; i < osArr.length; i++) {
-        if (os.indexOf(osArr[i]) >= 0)
-            isNormalOs = true;
-    }*/
-    hasIE = /*@cc_on (@_jscript_version+"").replace(/\d\./, ''); @*/
-    false;
+    hasIE = false;
     hasOpera = !!window.opera && window.opera.version && window.opera.version();
     hasChrome = !!window.chrome && (/chrome\/([\d\.]+)/i.exec(navigator.userAgent)[1] || true);
     hasFireFox = !!window.sidebar && (/firefox\/([\d\.]+)/i.exec(navigator.userAgent)[1] || true);
     hasSafari = !window.external && !hasOpera && (/safari\/([\d\.]+)/i.exec(navigator.userAgent)[1] || true);
     if (hasOpera != false || hasFireFox != false || hasSafari != false)
         alert("Корректная работа HTML-каталога обеспечиватся только для броузеров Google Chrome и Microsoft Explorer(версии 9.0 и выше). Для вашего типа броузера часть функций либо весь HTML-каталог могут неработоспособны!");
-/*    if (isNormalOs != true) {
-        var osver = os.substr(indexOf("Windows"), 14);
-        alert("Вы используете " + osver + " и Internet Explorer" + os.substr(os.indexOf("MSIE") + 5, 3) + " Для работы с каталогом необходима операционная система Windows XP и выше, Internet Explorer 9.0 и выше");
-        close();
-    }*/
     var uaVers;
     if (os.indexOf("MSIE") >= 0) {
         uaVers = os.substr(os.indexOf("MSIE") + 5, 3);
@@ -362,8 +340,10 @@ function setup(ul) {
         }
         ;
     }
+
     //Строим дерево классификаторов
     class_tree();
+
     //Корректируем данные, если вдруг родителя какой-то группы нет среди выгруженных
     for (var i = 0; i < grNames.length; i++) {
         var parent_ind = -1;
@@ -374,10 +354,13 @@ function setup(ul) {
             }
         grNames[i][3] = parent_ind;
     }
-    var buff = [];
+
     //Массив строк, содержащих HTML-код дерева функциональных групп
+    var buff = [];
+
     funk_group(-1, buff);
     ul.innerHTML = "<br>" + '' + buff.join('');
+
     buff = [];
     for (var i = 0; i < data.length ; i++)
     {
@@ -411,11 +394,11 @@ function setup(ul) {
 function fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
         cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_dat[0]);
-    cur_dat[3] = cur_asgd[IND_ASGD_NAME];
-    if (cur_asgd[IND_ASGD_NAME] == cur_dat[2]) {
+    cur_dat[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
+/*    if (cur_asgd[IND_ASGD_NAME] == cur_dat[2]) {
         cur_dat[3] = cur_dat[2];
         cur_dat[2] = '';
-    }
+    }*/
     cur_dat[isinrec - 1] = 0;
     cur_dat[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
     cur_dat[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
@@ -490,6 +473,7 @@ function funk_group(par_ind, buff) {
         // См. note_001_mal
     }
 }
+
 function class_tree() {
     var v;
     var i = 0
@@ -579,9 +563,9 @@ function class_tree() {
     }
 }
 
-function form_displaying_name(cur_data, cur_asgd)
+function form_displaying_name(cur_data/*, cur_asgd*/)
 {
-    return cur_asgd[IND_ASGD_NAME] + " " + cur_data[2];
+    return cur_asgd[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
 }
 
 function tree_composition(par_gr, buff) {
@@ -593,7 +577,7 @@ function tree_composition(par_gr, buff) {
             var cur_asgd = allSubgrGrData[i][j];
             var data_ind = cur_asgd[IND_ASGD_DATA_IND] - 1;
             var cur_data = data[data_ind];
-            var displaying_name = form_displaying_name(cur_data, cur_asgd);
+            var displaying_name = form_displaying_name(cur_data/*, cur_asgd*/);
 
             if (par_gr == cur_data[12] && isnotElemIn(arr, displaying_name))
             {
@@ -609,7 +593,7 @@ function tree_composition(par_gr, buff) {
                         var cur_asgd_temp = allSubgrGrData[ii][jj];
                         var data_ind_temp = cur_asgd_temp[IND_ASGD_DATA_IND] - 1;
                         var cur_data_temp = data[data_ind_temp];
-                        var displaying_name_temp = form_displaying_name(cur_data_temp, cur_asgd_temp);
+                        var displaying_name_temp = form_displaying_name(cur_data_temp/*, cur_asgd_temp*/);
 
                         if (displaying_name == displaying_name_temp && cur_data_temp[12] == par_gr)
                         {
@@ -642,6 +626,7 @@ function build_tree(codegr, codeupgr) {
             }
         }
 }
+
 function isnotElemIn(mas, elem) {
     for (var i = 0; i < mas.length; i++) {
         if (mas[i] == elem)
@@ -649,6 +634,7 @@ function isnotElemIn(mas, elem) {
     }
     return true;
 }
+
 function setmap(indx) {
     if (indx != -1) {
         var ss = document.getElementById("maps");
@@ -716,6 +702,7 @@ function setmap(indx) {
         ss.innerHTML = f;
     }
 }
+
 function setToolTip(numbdetal, note) {
     //  if (data[numbdetal - 1][1] != '') {
     var table = document.getElementById('tablID');
@@ -758,6 +745,7 @@ function setToolTip(numbdetal, note) {
     s = s.replace(new RegExp("</br>", 'g'), "\n");
     return s;
 }
+
 function setCheck() {
     var dd = document.getElementById("recucle");
     var s = "";
@@ -851,6 +839,7 @@ function setCheck() {
     }
     doResizeCode();
 }
+
 function setunCheck(i) {
     var dd = document.getElementById("recucle");
     var s = "";
@@ -908,6 +897,7 @@ function setunCheck(i) {
         }
     }
 }
+
 function isNumberlnput(field, event) {
     var key, keyChar;
     if (window.event)
@@ -925,6 +915,7 @@ function isNumberlnput(field, event) {
         return false;
     }
 }
+
 function isIe() {
     var browserName = navigator.appName;
     if (browserName == "Microsoft Internet Explorer") {
@@ -933,9 +924,11 @@ function isIe() {
         return false;
     }
 }
+
 function closeIt() {
     close();
 }
+
 function changeD(id) {
     var preli = document.getElementById(previd);
     if (preli)
@@ -955,6 +948,7 @@ function changeD(id) {
     if (img)
         img.src = "./img/minus.gif";
 }
+
 function changeDisplay(id) {
     var ul = document.getElementById("ul" + id);
     var img = document.getElementById("img" + id);
@@ -1135,6 +1129,7 @@ function scrollIV(id, ps) {
             parentEl.scrollTop = element.offsetTop - 20;
     //element.scrollIntoView(false);
 }
+
 function scaleIt(v, width, height) {
     var imageDiv = document.getElementById("mainImage");
     //var imgs = document.getElementById("imageDiv");
@@ -1162,6 +1157,7 @@ function scaleIt(v, width, height) {
     }
     boxVisible(curimg, curpos, true, true);
 }
+
 function setcolored(current, color) {
     if (current > 0)
     {
@@ -1213,6 +1209,7 @@ function setcolored(current, color) {
         } */
     //  prev=current; 
 }
+
 function setcolored1(current) {
     var k = document.getElementById(current);
     if (prev1 != -1 && prev1 != current) {
@@ -1243,6 +1240,7 @@ function getImageSrc(prefix, flag) {
     else
         return prefix + "./img/plus.gif";
 }
+
 function open_tree(codegr, codeupgr) {
     for (var i = 0; i < grClassify.length; i++) {
         if (codeupgr == grClassify[i][0]) {
@@ -1254,6 +1252,7 @@ function open_tree(codegr, codeupgr) {
         }
     }
 }
+
 function showclassify() {
     var img = document.getElementById('classifimg');
     if (classifier_showed == 1) {
@@ -1275,6 +1274,7 @@ function showclassify() {
         classifier_showed = 1;
     }
 }
+
 function showclass() {
     var img = document.getElementById('classimg');
     if (func_groups_showed == 1) {
@@ -1302,6 +1302,7 @@ function showclass() {
         func_groups_showed = 1;
     }
 }
+
 function showcomposition() {
     var img = document.getElementById('classcompimg');
     if (tree_comp_showed == 1) {
@@ -1329,6 +1330,7 @@ function showcomposition() {
         tree_comp_showed = 1;
     }
 }
+
 function change(current, area_index, img_index, p, pp) {
     if (current != -1) {
         if (area_index != -1) {
@@ -1460,6 +1462,7 @@ function change(current, area_index, img_index, p, pp) {
         setcolored(-1);
     }
 }
+
 function setOpen(q) {
     var img = document.getElementById("img" + q);
     if (img)
@@ -1468,6 +1471,7 @@ function setOpen(q) {
     if (ul != null)
         ul.style.display = 'block';
 }
+
 function openItemTree(ind) {
     if (ind < 0 || ind >= data.length)
         return;
@@ -1475,11 +1479,11 @@ function openItemTree(ind) {
     setOpen(id);
     openItemTree(data[ind][12]);
 }
+
 function openGroupTree(ind)
 {
     if (ind < 0 || ind >= grNames.length)
         return;
-//    var id = ind + 1;
     setOpen(ind);
     openGroupTree(grNames[ind][3]);
 }
@@ -1563,12 +1567,14 @@ if (box != null) {
         s++;
     }
 }
+
 function change_image_index(index) {
     if (index != -1) {
         curimg = index;
     }
     change_image_flag(false);
 }
+
 function clear_sel() {
     var k = document.getElementById(prev);
     if (k != undefined)
@@ -1580,12 +1586,14 @@ function clear_sel() {
     if (k != undefined)
         k.style.background = "#ffffff";
 }
+
 function change_image() {
     clear_sel();
     sel_item = false;
     boxVisible(-1, -1, true, true);
     change_image_flag(true);
 }
+
 function change_image_flag(flag) {
     if (curimg < 0)
         return;
@@ -1627,6 +1635,7 @@ function change_image_flag(flag) {
         boxVisible(-1, -1, true, true);
     }
 }
+
 var name = "";
 var cur_Ill = 0;
 var cur_Ill_index = 0;
@@ -1689,13 +1698,14 @@ function OpenImagePopup(imgPath, title, alt, name) {
     win.document.close();
     win.focus();
 }
-//<input type=button onClick='previllustr()' value=' < '>" + "<input type=button onClick='nextillustr()' value=' > '>
+
 function setill(i) {
     cur_Ill_index = i;
     var image = document.getElementById("image");
     image.src = './illustration/' + addIll[cur_Ill_index];
     setcnt(cur_Ill_index + 1);
 }
+
 function nextillustr() {
     cur_Ill_index++;
     if (addIll.length - 1 < cur_Ill_index)
@@ -1704,6 +1714,7 @@ function nextillustr() {
     image.src = './illustration/' + addIll[cur_Ill_index];
     setcnt(cur_Ill_index + 1);
 }
+
 function previllustr() {
     cur_Ill_index--;
     if (cur_Ill_index < 0)
@@ -1712,54 +1723,12 @@ function previllustr() {
     image.src = './illustration/' + addIll[cur_Ill_index];
     setcnt(cur_Ill_index + 1);
 }
+
 function setcnt(i) {
     var c = document.getElementById('counter');
     c.innerHTML = name + "       " + illustr + ": " + i + "/" + addIll.length + " " + "<b>" + addIllnames[i - 1] + "</b>";
 }
-//экспорт в excel
-function newXLS() {
-    if (isIe()) {
-        var my_xls = new ActiveXObject("Excel.Application");
-        my_xls.visible = true;
-        var excelSheet = my_xls.Workbooks.Add;
-        excelSheet.Worksheets.Add;
-        excelSheet.Worksheets(1).Activate;
-        var table = document.getElementById('tabl');
-        var trList = table.getElementsByTagName('tr');
-        excelSheet.Worksheets(1).Columns("A").columnwidth = 100;
-        excelSheet.Worksheets(1).Columns("B").columnwidth = 20;
-        var i = 0;
-        var tdList = trList[i].getElementsByTagName('td');
-        excelSheet.Worksheets(1).Cells(1, 1).value = trans[4];
-        excelSheet.Worksheets(1).Cells(1, 2).value = trans[5];
-        //  excelSheet.Worksheets(1).Cells(1, tdList.length-1).value = tdList[tdList.length - 2].innerHTML;
-        var i = 1;
-        var countDet = 0;
-        var cc = 2;
-        while (countDet < colbolts - 1) {
-            if (data[countDet][isinrec - 2] == '1') {
-                var ss = "";
-                for (j = 2; j < tdList.length - 2; j++) {
-                    if (j != tdList.length - 3)
-                        if (data[countDet][j] != "")
-                            ss = ss + data[countDet][j] + ",  ";
-                        else
-                            ss = ss + data[countDet][j];
-                }
-                excelSheet.Worksheets(1).Cells(cc, 1).value = ss;
-                excelSheet.Worksheets(1).Cells(cc, 2).value = data[countDet][isinrec - 1];
-                cc++;
-                i++;
-            }
-            countDet++;
-        }
-        excelSheet.Worksheets(1).Name = "engineering elements";
-    } else {
-        msg = 'Данная операция доступна только для Microsoft Internet Explorer версии 7.0 или выше';
-        //msg="Need the internet explorer to doing this operation";
-        window.alert(msg);
-    }
-}
+
 var addEvent = function (elem, type, eventHandle) {
     if (elem == null || elem == undefined)
         return;
@@ -1768,11 +1737,12 @@ var addEvent = function (elem, type, eventHandle) {
     } else if (elem.attachEvent) {
         elem.attachEvent("on" + type, eventHandle);
     }
-}
-;
+};
+
 addEvent(window, "resize", function () {
     doResizeCode();
 });
+
 function doResizeCode() {
     var tablID = document.getElementById("tablID");
     var imgD = document.getElementById("imgD");
@@ -1889,23 +1859,6 @@ function doResizeCode() {
 }
 
 function exportRecToCsv(filename, rows) {
-    var processRow = function (row) {
-        var finalVal = '';
-        for (var j = 0; j < row.length; j++) {
-            var innerValue = row[j] === null ? '' : row[j].toString();
-            if (row[j] instanceof Date) {
-                innerValue = row[j].toLocaleString();
-            };
-            var result = innerValue.replace(/"/g, '""');
-            if (result.search(/("|,|\n)/g) >= 0)
-                result = '"' + result + '"';
-            if (j > 0)
-                finalVal += ',';
-            finalVal += result;
-        }
-        return finalVal + '\n';
-    };
-
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdList = trList[0].getElementsByTagName('td');
