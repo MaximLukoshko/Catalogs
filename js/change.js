@@ -51,7 +51,7 @@ var IND_D_WEIGHT       =  4; // Масса
 var IND_D_COHERED_TO   =  5; // Связность
 
 // Плавающая переменная. Её значение изменяется в зависимости от количества колонок в таблице
-var IND_D_TABLELENGTH  = -1; 
+var IND_D_TABLELENGTH  = 11; 
 
 // Предопределённые смещения для массива data относительно позиции IND_D_TABLELENGTH
 // SH = SHIFT
@@ -98,7 +98,8 @@ function sSort(i, ii) {
             return 0;
     }
 }
-function settables_for_subgroups(gr_ind,subgr_ind) {
+
+function settables_for_subgroups(gr_ind, subgr_ind) {
     var grFullName = grNames[gr_ind][1] + ". " + grNames[gr_ind][0];
     var subgrFullName = allSubgrGrNames[gr_ind][subgr_ind][1] == "" ? "" : allSubgrGrNames[gr_ind][subgr_ind][1] + ". ";
     subgrFullName += allSubgrGrNames[gr_ind][subgr_ind][0];
@@ -358,7 +359,7 @@ function setup(ul) {
     //Массив строк, содержащих HTML-код дерева функциональных групп
     var buff = [];
 
-    funk_group(-1, buff);
+    func_group(-1, buff);
     ul.innerHTML = "<br>" + '' + buff.join('');
 
     buff = [];
@@ -395,10 +396,6 @@ function fillEmptyFields(cur_asgd, cur_dat, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
         cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_dat[0]);
     cur_dat[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
-/*    if (cur_asgd[IND_ASGD_NAME] == cur_dat[2]) {
-        cur_dat[3] = cur_dat[2];
-        cur_dat[2] = '';
-    }*/
     cur_dat[isinrec - 1] = 0;
     cur_dat[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
     cur_dat[tablelenth] = cur_subgr_name[1] + " " + cur_subgr_name[0];
@@ -409,7 +406,7 @@ var jj = 0;
 var previmg = -1;
 var prevpos = -1;
 //Формирует элементы, входящие в группу
-function funk_group(par_ind, buff) {
+function func_group(par_ind, buff) {
     for (var i = 0; i < grNames.length; i++) {
         if (grNames[i][3] != par_ind)
             continue;//Выполняется только для групп, для которых par_ind является родителем
@@ -468,7 +465,7 @@ function funk_group(par_ind, buff) {
         }
         buff.push(group_content);
         //Формируем дочерние группы для данной
-        funk_group(i, buff);
+        func_group(i, buff);
         buff.push("</div>");
         // См. note_001_mal
     }
@@ -563,9 +560,9 @@ function class_tree() {
     }
 }
 
-function form_displaying_name(cur_data/*, cur_asgd*/)
+function form_displaying_name(cur_data)
 {
-    return cur_asgd[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
+    return cur_data[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
 }
 
 function tree_composition(par_gr, buff) {
@@ -1354,53 +1351,8 @@ function change(current, area_index, img_index, p, pp) {
         sel_item = true;
         if (current > 0) {
             cur = current - 1;
-            var table = document.getElementById('tablID');
-            var trList = table.getElementsByTagName('tr');
-            var tdListName = trList[0].getElementsByTagName('td');
-            var gr = 0
-                , pgr = 0;
-            var group = document.getElementById('group');
- 
-            group.innerHTML = "<div class=\"hh2\">" + trans[0] + " / " + trans[1] + ":</div>" + "<div class=\"hh3\">" + data[cur][tablelenth - 1] + " / " + data[cur][tablelenth] + "</div>";
+            settables_for_item(cur);
 
-            var s = "";
-            var a = current - findsize;
-            if (a <= 1)
-                a = 1;
-            var aa = current + findsize;
-            if (aa >= data.length)
-                aa = data.length;
-            s = s + '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
-            for (var j = 1; j < tablelenth; j++)
-                s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
-            s = '<tr>' + s + '</tr>';
-            s = s + '<tr>';
-            var detindx = 0;
-            for (var k = a; k <= aa; k++) {
-                if (data[k - 1][0] == data[current - 1][0] && data[k - 1][1] == data[current - 1][1]) {
-                    dettorec[detindx] = k - 1;
-                    detsort[detindx] = k - 1;
-                    detindx++;
-                    for (var m = 0; m < tablelenth; m++) {
-                        if (m < tablelenth - 2)
-                            s = s + '<td>' + data[k - 1][m] + '</td>';
-                        else {
-                            if (m == tablelenth - 2)
-                                r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; margin-top: 4px; margin-bottom: 2px;\" name=\"countIn\" value='0' id=\"count" + (k - 1) + "\" >";
-
-                            if (m == tablelenth - 1)
-                                r = "<div id='t" + (k - 1) + "'>" + data[k - 1][isinrec - 1] + "</div>";
-                            s = s + '<td>' + r + '</td>';
-                        }
-                    }
-                    s = s + '</tr>';
-                }
-            }
-            dettorec[detindx] = -1;
-            detsort[detindx] = -1;
-            s = '<table id=\"tabl\" class=\"tdb\"style=\"width:99%;height:99%;position:relative;left:5px;\" >' + s + '</table>';
-            table.innerHTML = s;
-    
             var f = false;
             var t = 0;
             var h = 0;
