@@ -319,6 +319,8 @@ function setup(ul) {
     var tdListName = trList[0].getElementsByTagName('td');
     tablelenth = tdListName.length;
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Проверяем, в каком браузере открывается страница
     var os = navigator.userAgent;
     hasIE = false;
     hasOpera = !!window.opera && window.opera.version && window.opera.version();
@@ -337,8 +339,9 @@ function setup(ul) {
         ;
     }
 
-    //Строим дерево классификаторов
-    class_tree();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Строим дерево по функциональным группам
 
     //Корректируем данные, если вдруг родителя какой-то группы нет среди выгруженных
     for (var i = 0; i < grNames.length; i++) {
@@ -351,13 +354,21 @@ function setup(ul) {
         grNames[i][3] = parent_ind;
     }
 
-    //Массив строк, содержащих HTML-код дерева функциональных групп
-    var buff = [];
-
+    var buff = []; //Массив строк, содержащих HTML-код дерева функциональных групп
     func_group(-1, buff);
     ul.innerHTML = "<br>" + '' + buff.join('');
 
-    buff = [];
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Строим дерево классификаторов
+    class_tree();
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Строим дерево по составу
+
+    //Корректируем данные, если вдруг элемент входит в состав того, которого нет среди выгруженных
     for (var i = 0; i < data.length ; i++)
     {
         var index = -1;
@@ -372,8 +383,10 @@ function setup(ul) {
         data[i][IND_D_TABLELENGTH + SH_D_INCCODE] = index;
     }
 
+    buff = [];
     tree_composition(-1, buff);
-    
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var ulcomp_field = document.getElementById("ulcomp");
     if (ulcomp_field.innerHTML == "undefined")
         ulcomp_field.innerHTML = "";
@@ -389,7 +402,7 @@ function setup(ul) {
 
 function fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
-        cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[0]);
+        cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[IND_D_IMG]);
     cur_data[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
     cur_data[isinrec - 1] = 0;
     cur_data[tablelenth - 1] = cur_gr_name[1] + " " + cur_gr_name[0];
@@ -446,7 +459,7 @@ function func_group(par_ind, buff) {
                 group_content += "<a onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");'><div  class='bolt' id='" + cur_asgd[IND_ASGD_DATA_IND] + "' style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;width:200px'>&nbsp;" + displaying_name + "</div></a>";
 
                 if (img_pos != -1)
-                    group_content += "<img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + cur_asgd[IND_ASGD_NAME] + " " + cur_data[2] + "');\"></div>";
+                    group_content += "<img src='./img/foto.gif' style='position:relative;top:-14px;left:200px' onclick=\"return OpenImagePopup('" + grIllustration[img_pos][1] + "', 'Деталь', 'Закрыть','" + cur_asgd[IND_ASGD_NAME] + " " + cur_data[IND_D_SIGN] + "');\"></div>";
 
                 order_funcgroups.push([cur_asgd[IND_ASGD_DATA_IND] - 1, jj, k, displaying_name]);
                 d++;
@@ -500,7 +513,7 @@ function class_tree() {
 
                     if (v && isnotElemIn(mas, s)) {
                         var m = p + 1000000;
-                        var displaying_name = cur_asgd[IND_ASGD_NAME] + " " + data[data_ind][2];
+                        var displaying_name = form_displaying_name(data[data_ind]);
                         v.innerHTML += "<img id='img" + m + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + m + ");'><div id='li" + m + "'  onClick='javascript:changeDisplay(" + m + ");' class='curclass' style='margin-top:-14px;margin-left:10px;font-weight:normal;cursor:pointer' >" + displaying_name + "</div>" + "<div id='ul" + m + "' style='display:none;margin-left:15px'>";
                         mas[p] = s;
                         p++;
@@ -521,7 +534,8 @@ function class_tree() {
                     var s = form_displaying_name(cur_data);
 
                     for (var d = 0; d < mas.length; d++) {
-                        if (mas[d] == s) {
+                        if (mas[d] == s)
+                        {
                             var m = d + 1000000;
                             v = document.getElementById("ul" + m);
                             if (v) {
@@ -532,7 +546,7 @@ function class_tree() {
                                 var displaying_name = form_displaying_name(cur_data);
                                 order_classify.push([data_ind, jj, k, displaying_name]);
 
-                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + cur_data[0] + ", " + trans[13] + " " + cur_data[1] + "</div></a>";
+                                v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + cur_data[IND_D_IMG] + ", " + trans[13] + " " + cur_data[IND_D_POSITION] + "</div></a>";
                                 cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GR_CLS_CODE];
                                 cur_asgd[IND_ASGD_CLS_ID] = m;
                                 cur_asgd[IND_ASGD_GR_CLS_CODE] = bol;
@@ -687,7 +701,6 @@ function setmap(indx) {
 }
 
 function setToolTip(numbdetal, note) {
-    //  if (data[numbdetal - 1][1] != '') {
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
@@ -985,8 +998,8 @@ function changeDisplay(id) {
             var k = 0;
             ii = 0;
             // while (k < allSubgrGrData[ll + i].length|| ii == "-1") ii = allSubgrGrData[ll + i][k++][0];
-            var indexx = allSubgrGrData[ll + i][0][IND_ASGD_DATA_IND];
-            ii = numbimg(data[indexx - 1][0]);
+            var indexx = allSubgrGrData[ll + i][0][IND_ASGD_DATA_IND] - 1;
+            ii = numbimg(data[indexx][IND_D_IMG]);
             if (ii != jj && ii != "-1") {
                 if (cn == cwidth) {
                     cn = 0;
@@ -1152,7 +1165,7 @@ function setcolored(current, color) {
         if (aa >= data.length)
             aa = data.length;
         for (var k = a; k <= aa; k++) {
-            if (data[k - 1][0] == data[current - 1][0] && data[k - 1][1] == data[current - 1][1]) {
+            if (data[k - 1][IND_D_IMG] == data[current - 1][IND_D_IMG] && data[k - 1][IND_D_POSITION] == data[current - 1][IND_D_POSITION]) {
                 selarr[selindex] = k;
                 selindex++;
                 var kk = document.getElementById(k);
@@ -1321,7 +1334,7 @@ function change(current, area_index, img_index, p, pp) {
             if (curimg != img_index)
                 change_image_index(img_index);
             tree_item_opened = true;
-            if (data[current - 1][1] != '') {
+            if (data[current - 1][IND_D_POSITION] != '') {
                 boxVisible(img_index, area_index, tree_item_opened, true);
                 setcolored(current, "#abc3e7");
             }
@@ -1380,7 +1393,7 @@ function change(current, area_index, img_index, p, pp) {
                                     s.style.background = "#ffffff";
                             }
                         }
-                        if (data[current - 1][1] == '') {
+                        if (data[current - 1][IND_D_POSITION] == '') {
                             tree_item_opened = false;
                             boxVisible(-1, -1, true, true);
                         }
@@ -1415,7 +1428,7 @@ function openItemTree(ind) {
         return;
     var id = ind + 2000000 + 1;
     setOpen(id);
-    openItemTree(data[ind][12]);
+    openItemTree(data[ind][IND_D_TABLELENGTH + SH_D_INCCODE]);
 }
 
 function openGroupTree(ind)
