@@ -159,6 +159,31 @@ function form_buff_for_item(item_ind, buff)
             form_buff_for_item(i, buff);
 }
 
+function formCommonPartForTable(cur_ind)
+{
+    var r = "";
+    for (var m = 0; m < IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC; m++)
+        r += '<td>' + data[cur_ind][m] + '</td>';
+    return r;
+}
+
+function formAddPartForTable(cur_ind)
+{
+    var r = "";
+    r += "<td><div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\"></td>";
+    r += "<td><div id='t" + cur_ind + "'>" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "</div></td>";
+    return r;
+}
+
+function formDeletePartForTable(cur_ind)
+{
+    var r = "";
+    r += "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + cur_ind + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + cur_ind + "'></td>";
+    r += "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + cur_ind + ")\"> </td>";
+    return r;
+}
+
+
 function form_table_by_array(ind_array) {
     ind_array.sort(function (a, b) { return a - b; });
 
@@ -171,25 +196,10 @@ function form_table_by_array(ind_array) {
     s = '<tr>' + s + '</tr>';
     for (var i = 0; i < ind_array.length; i++) {
         var cur_ind = ind_array[i];
-        var dat = data[cur_ind];
         dettorec[i] = cur_ind;
         detsort[i] = cur_ind;
 
-        s = s + '<tr>';
-        for (var m = 0; m < IND_D_TABLELENGTH; m++) {
-            var r = '';
-            if (m < IND_D_TABLELENGTH - 2) {
-                r = dat[m];
-            } else {
-                if (m == IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC) {
-                    r = "<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\">";
-                }
-                if (m == IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE)
-                    r = "<div id='t" + cur_ind + "'>" + dat[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "</div>";
-            }
-            s = s + '<td>' + r + '</td>';
-        }
-        s = s + '</tr>';
+        s += "<tr>" + formCommonPartForTable(cur_ind) + formAddPartForTable(cur_ind) + "<tr>";
     }
     dettorec[ind_array.length] = -1;
     detsort[ind_array.length] = -1;
@@ -198,6 +208,37 @@ function form_table_by_array(ind_array) {
     table.innerHTML = s;
     doResizeCode();
 }
+
+
+function form_recucle_table()
+{
+    countinrec = 0;
+
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdListName = trList[0].getElementsByTagName('td');
+
+    var s = "";
+
+    for (var j = 0; j < IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC; j++)
+        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
+    s = s + "<td class='h'>" + trans[5] + "</td>";
+    s = s + "<td class='h'>" + trans[6] + "</td>";
+
+    s = '<tr>' + s + '</tr>';
+
+    for (var cur_ind = 0; cur_ind < data.length; cur_ind++)
+        if (data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] > 0)
+        {
+            s += "<tr>" + formCommonPartForTable(cur_ind) + formDeletePartForTable(cur_ind) + "</tr>";
+            countinrec++;
+        }
+
+    s = "<table style=\"width:99%;position:relative;left:5px;top:10px;\">" + s + '</table>';
+
+    return s;
+}
+
 
 function numbimg(i) {
     var k = 0;
@@ -242,36 +283,7 @@ function openRecucle(ii) {
         s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
-        s = s + "<div class='rectable'><table style=\"width:99%;position:relative;left:5px;top:10px;\">";
-        var table = document.getElementById('tablID');
-        var trList = table.getElementsByTagName('tr');
-        var tdList = trList[0].getElementsByTagName('td');
-        s = s + "<td class='h'>" + trans[4] + "</td>";
-        s = s + "<td class='h'>" + trans[5] + "</td>";
-        s = s + "<td class='h'>" + trans[6] + "</td>";
-        s = s + "</tr>";
-        var countDet = 0;
-        countinrec = 0;
-        while (countDet < colbolts - 1) {
-            if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] >0) {
-                countinrec++;
-                s = s + "<tr >";
-                var ss = "";
-                for (j = 2; j < tdList.length - 2; j++) {
-                    if (j != tdList.length - 3)
-                        if (data[countDet][j] != "")
-                            ss = ss + data[countDet][j] + ",  ";
-                        else
-                            ss = ss + data[countDet][j];
-                }
-                s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
-                s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
-                s = s + "</tr>";
-            }
-            countDet++;
-        }
-        s = s + "</table></div>";
+        s = s + "<div class='rectable'>" + form_recucle_table() + "</div>";
         isopen = 1;
         modify = 300;
     }
@@ -439,7 +451,7 @@ function func_group(par_ind, buff) {
         for (var j = 0; j < allSubgrGrNames[i].length; j++) {
             var nn = 0;
             allSubgrGrNames[i][j][1] = '';
-            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][0] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
+            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][IND_D_IMG] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
             //Формируем элементы, входящие в группы
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
@@ -750,92 +762,60 @@ function setToolTip(numbdetal, note) {
 }
 
 function setCheck() {
-    var dd = document.getElementById("recucle");
     var s = "";
-    //if(i!=undefined)
-    {
-        var l = 0;
-        var table = document.getElementById('tablID');
-        var trList = table.getElementsByTagName('tr');
-        var tdListName = trList[0].getElementsByTagName('td');
-        var len = tdListName.length;
-        var min = dettorec[0];
-        var val = 0;
-        while (dettorec[l] != -1) {
-            var cc = document.getElementById("count" + detsort[l]);
-            if (cc != null && cc.value != 0) {
-                data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = cc.value;
-                var a = 0;
-                var v = document.getElementById("t" + detsort[l]);
-                v.innerHTML = cc.value;
-                if (cc.value == '')
-                    data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
-                val = cc.value;
-                cc.value = 0;
-                var msg = "Добавлен в корзину";
-                if (grCoher.length != 0)
-                    for (var ii = 0; ii < grCoher.length; ii++) {
-                        if (grCoher[ii][0] == dettorec[l]) {
-                            //ss="Добавлен в корзину. В корзину помещены также следующие детали:" ;
-                            for (var j = 1; j < grCoher[ii].length; j++) {
-                                var n = grCoher[ii][j];
-                                var v = document.getElementById("t" + (n - 1));
-                                if (v)
-                                    v.innerHTML = val;
-                                var m = 1;
-                                for (var t = 0; t < allSubgrGrData.length; t++) {
-                                    m = allSubgrGrData[t].length - 1;
-                                    if (n < m) {
-                                        data[grCoher[ii][j] - 1][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = val;
-                                        break;
-                                    } else
-                                        n -= m;
-                                }
+    var l = 0;
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdListName = trList[0].getElementsByTagName('td');
+    var len = tdListName.length;
+    var min = dettorec[0];
+    var val = 0;
+    while (dettorec[l] != -1) {
+        var cc = document.getElementById("count" + detsort[l]);
+        if (cc != null && cc.value != 0) {
+            data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = cc.value;
+            var a = 0;
+            var v = document.getElementById("t" + detsort[l]);
+            v.innerHTML = cc.value;
+            if (cc.value == '')
+                data[detsort[l]][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
+            val = cc.value;
+            cc.value = 0;
+            var msg = "Добавлен в корзину";
+            if (grCoher.length != 0)
+                for (var ii = 0; ii < grCoher.length; ii++) {
+                    if (grCoher[ii][0] == dettorec[l]) {
+                        //ss="Добавлен в корзину. В корзину помещены также следующие детали:" ;
+                        for (var j = 1; j < grCoher[ii].length; j++) {
+                            var n = grCoher[ii][j];
+                            var v = document.getElementById("t" + (n - 1));
+                            if (v)
+                                v.innerHTML = val;
+                            var m = 1;
+                            for (var t = 0; t < allSubgrGrData.length; t++) {
+                                m = allSubgrGrData[t].length - 1;
+                                if (n < m) {
+                                    data[grCoher[ii][j] - 1][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = val;
+                                    break;
+                                } else
+                                    n -= m;
                             }
-                            //alert(ss);
                         }
+                        //alert(ss);
                     }
-            }
-            l++;
-        }
-        if (isopen == 1) {
-            s = s + "<div id='recle' class='fgr'>";
-            s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
-            s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
-            s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">->CSV</div>";
-            s = s + "<div class=\"submit\" id='online' style=\"position:absolute;width:120px;height:22px;\" onClick=\"online();\">" + trans[2] + "</div>";
-            //s = s +"<div class=\"submit\" id='exel' style=\"position:absolute;width:160px;height:22px;\" onClick=\"online();\">"+ trans[3] +"</div>";
-            s = s + "<div class='rectable'><table style=\"width:98%;position:relative;left:10px;top:10px;\">";
-            var table = document.getElementById('tablID');
-            var trList = table.getElementsByTagName('tr');
-            var tdList = trList[0].getElementsByTagName('td');
-            s = s + "<td class='h'>" + trans[4] + "</td>";
-            s = s + "<td class='h'>" + trans[5] + "</td>";
-            s = s + "<td class='h'>" + trans[6] + "</td>";
-            s = s + "</tr>";
-            countDet = 0;
-            countinrec = 0;
-            while (countDet < colbolts - 1) {
-                if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE]  > 0) {
-                    countinrec++;
-                    s = s + "<tr >";
-                    var ss = "";
-                    for (j = 2; j < tdList.length - 2; j++) {
-                        if (j != tdList.length - 3)
-                            ss += data[countDet][j];
-                            if (data[countDet][j] != "")
-                                ss += ",  ";
-                    }
-                    s = s + "<td style='font: 11px Tahoma; color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
-                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
-                    s = s + "</tr>";
                 }
-                countDet++;
-            }
-            s = s + "</table><div>";
-            dd.innerHTML = s;
         }
+        l++;
+    }
+    if (isopen == 1) {
+        s = s + "<div id='recle' class='fgr'>";
+        s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
+        s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
+        s = s + "<div class=\"submit\" id='online' style=\"position:absolute;width:120px;height:22px;\" onClick=\"online();\">" + trans[2] + "</div>";
+        s = s + "<div class='rectable'>" + form_recucle_table() + "<div>";
+        var dd = document.getElementById("recucle");
+        dd.innerHTML = s;
     }
     doResizeCode();
 }
@@ -847,43 +827,13 @@ function setunCheck(i) {
         var v = document.getElementById("t" + i);
         if (v != null)
             v.innerHTML = 0;
-        data[i][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = '0';
+        data[i][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
         if (isopen == 1) {
             s = s + "<div id='recle' class='fgr'>";
             s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
             s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
             s = s + "<div class=\"submit\" id='online' style=\"position:absolute;width:120px;height:22px;\" onClick=\"online();\">" + trans[2] + "</div>";
-            // s = s +"<div class=\"submit\" id='exel' style=\"position:absolute;width:160px;height:22px;\" onClick=\"online();\">"+ trans[3] +"</div>";
-            s = s + "<div class='rectable'><table style=\"width:98%;position:relative;left:10px;top:10px;\">";
-            var table = document.getElementById('tablID');
-            var trList = table.getElementsByTagName('tr');
-            var tdList = trList[0].getElementsByTagName('td');
-            s = s + "<td class='h'>" + trans[4] + "</td>";
-            s = s + "<td class='h'>" + trans[5] + "</td>";
-            s = s + "<td class='h'>" + trans[6] + "</td>";
-            s = s + "</tr>";
-            countDet = 0;
-            countinrec = 0;
-            while (countDet < colbolts - 1) {
-                if (data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] > 0) {
-                    countinrec++;
-                    s = s + "<tr >";
-                    var ss = "";
-                    for (j = 2; j < tdList.length - 2; j++) {
-                        if (j != tdList.length - 3)
-                            if (data[countDet][j] != "")
-                                ss = ss + data[countDet][j] + ",  ";
-                            else
-                                ss = ss + data[countDet][j];
-                    }
-                    s = s + "<td style='font: 11px Tahoma;color: #000000;border: 1px solid #cacaca; height: 22px; padding-left: 6px;'>" + ss + "</td>"
-                    s = s + "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + countDet + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[countDet][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + countDet + "'></td>";
-                    s = s + "<td  style='font: 11px Tahoma;color: #000000;border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + countDet + ")\"> </td>";
-                    s = s + "</tr>";
-                }
-                countDet++;
-            }
-            s = s + "</table></div>";
+            s = s + "<div class='rectable'>" + form_recucle_table() + "</div>";
             dd.innerHTML = s;
             doResizeCode();
         }
