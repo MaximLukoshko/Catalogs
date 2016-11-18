@@ -97,6 +97,23 @@ function sSort(i, ii) {
     }
 }
 
+function coverTextWith_TR(text)
+{
+    return '<tr>' + text + '</tr>';
+}
+
+function coverTextWith_TD(text, style)
+{
+    style = style ? " " + style : "";
+
+    return '<td' + style + '>' + text + '</td>';
+}
+
+function coverTextWith_TABLE(text)
+{
+    return '<table class=\"tdb\" style=\"width:99%;position:relative;left:5px;top:5px;\">' + text + '</table>';
+}
+
 function settables_for_subgroups(gr_ind, subgr_ind) {
     var grFullName = grNames[gr_ind][1] + ". " + grNames[gr_ind][0];
     var subgrFullName = allSubgrGrNames[gr_ind][subgr_ind][1] == "" ? "" : allSubgrGrNames[gr_ind][subgr_ind][1] + ". ";
@@ -163,26 +180,25 @@ function formCommonPartForTable(cur_ind)
 {
     var r = "";
     for (var m = 0; m < IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC; m++)
-        r += '<td>' + data[cur_ind][m] + '</td>';
+        r += coverTextWith_TD(data[cur_ind][m]);
     return r;
 }
 
 function formAddPartForTable(cur_ind)
 {
     var r = "";
-    r += "<td><div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\"></td>";
-    r += "<td><div id='t" + cur_ind + "'>" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "</div></td>";
+    r += coverTextWith_TD("<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='0' name=\"countIn\" id=\"count" + cur_ind + "\">");
+    r += coverTextWith_TD("<div id='t" + cur_ind + "'>" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "</div>");
     return r;
 }
 
 function formDeletePartForTable(cur_ind)
 {
     var r = "";
-    r += "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'> <div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + cur_ind + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + cur_ind + "'></td>";
-    r += "<td style='font: 11px Tahoma;color: #000000; border: 1px solid #cacaca; height: 22px; padding-left: 6px;'><img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + cur_ind + ")\"> </td>";
+    r += coverTextWith_TD("<div style='width:80px'><input type=\"text\" onkeypress=\"return isNumberlnput(this, event);\" onblur=\"endedit(" + cur_ind + "," + (IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE) + ")\" style=\"width:40px; border: 1px solid #a6abaf; margin-top: 4px; margin-bottom: 2px; height: 20px;\" value='" + data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] + "' name=\"countInRec\" id='countrec" + cur_ind + "'>");
+    r += coverTextWith_TD("<img src=\"./img/recucledel.gif\" onclick=\"setunCheck(" + cur_ind + ")\">");
     return r;
 }
-
 
 function form_table_by_array(ind_array) {
     ind_array.sort(function (a, b) { return a - b; });
@@ -190,21 +206,22 @@ function form_table_by_array(ind_array) {
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdListName = trList[0].getElementsByTagName('td');
-    var s = '<td class=\"hk\">' + tdListName[0].innerHTML + '</td>';
-    for (var j = 1; j < IND_D_TABLELENGTH; j++)
-        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
-    s = '<tr>' + s + '</tr>';
+    var s = "";
+    for (var j = 0; j < IND_D_TABLELENGTH; j++)
+        s += coverTextWith_TD(tdListName[j].innerHTML, "class=\"h\"");
+    s = coverTextWith_TR(s);
     for (var i = 0; i < ind_array.length; i++) {
         var cur_ind = ind_array[i];
         dettorec[i] = cur_ind;
         detsort[i] = cur_ind;
 
-        s += "<tr>" + formCommonPartForTable(cur_ind) + formAddPartForTable(cur_ind) + "<tr>";
+        s += coverTextWith_TR(formCommonPartForTable(cur_ind) + formAddPartForTable(cur_ind));
     }
     dettorec[ind_array.length] = -1;
     detsort[ind_array.length] = -1;
 
-    s = '<table id=\"tabl\" class=\"tdb\" style=\"width:99%;height:99%;position:relative;left:5px;\">' + s + '</table>';
+    s = coverTextWith_TABLE(s);
+
     table.innerHTML = s;
     doResizeCode();
 }
@@ -221,20 +238,20 @@ function form_recucle_table()
     var s = "";
 
     for (var j = 0; j < IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC; j++)
-        s = s + '<td class=\"h\">' + tdListName[j].innerHTML + '</td>';
-    s = s + "<td class='h'>" + trans[5] + "</td>";
-    s = s + "<td class='h'>" + trans[6] + "</td>";
+        s += coverTextWith_TD(tdListName[j].innerHTML, "class=\"h\"");
+    s += coverTextWith_TD(trans[5], "class=\"h\"");
+    s += coverTextWith_TD(trans[6], "class=\"h\"");
 
-    s = '<tr>' + s + '</tr>';
+    s = coverTextWith_TR(s);
 
     for (var cur_ind = 0; cur_ind < data.length; cur_ind++)
         if (data[cur_ind][IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] > 0)
         {
-            s += "<tr>" + formCommonPartForTable(cur_ind) + formDeletePartForTable(cur_ind) + "</tr>";
+            s += coverTextWith_TR(formCommonPartForTable(cur_ind) + formDeletePartForTable(cur_ind));
             countinrec++;
         }
 
-    s = "<table style=\"width:99%;position:relative;left:5px;top:10px;\">" + s + '</table>';
+    s = coverTextWith_TABLE(s);
 
     return s;
 }
