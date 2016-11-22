@@ -291,6 +291,7 @@ function openRecucle(ii) {
         s = s + "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
         s = s + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToXml('Recucle.xml');\" id=\"exportToXML\" style=\"position:absolute;width:80px;height:22px\">XML</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
         modify = 180;
         isopen = 0;
@@ -299,6 +300,7 @@ function openRecucle(ii) {
         s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
         s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToXml('Recucle.xml');\" id=\"exportToXML\" style=\"position:absolute;width:80px;height:22px\">XML</div>";
         s = s + "<div class=\"submit\" id='online'  onClick=\"online();\">" + trans[2] + "</div>";
         s = s + "<div class='rectable'>" + form_recucle_table() + "</div>";
         isopen = 1;
@@ -331,6 +333,7 @@ function setup(ul) {
         recucle_str = recucle_str + "<img name='l1' id='up' src='./img/plusbig.gif' class='up' onClick='openRecucle(1);'>";
         recucle_str = recucle_str + "<div class='recucle' onClick='openRecucle(1);'>" + trans[14] + "</div>";
         recucle_str = recucle_str + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
+        recucle_str = recucle_str + "<div class=\"submit\" onclick=\"exportRecToXml('Recucle.xml');\" id=\"exportToXML\" style=\"position:absolute;width:80px;height:22px\">XML</div>";
         recucle_str = recucle_str + "<div class=\"submit\" id='online' onClick=\"online();\">" + trans[2] + "</div>";
         recucle_elem.innerHTML = recucle_str;
     }
@@ -829,6 +832,7 @@ function setCheck() {
         s = s + "<img name='l1' id='dawn' src='./img/minusbig.gif' class='up' onClick='openRecucle(0);'>";
         s = s + "<div class='recucle' onClick='openRecucle(0);'>" + trans[14] + "</div>";
         s = s + "<div class=\"submit\" onclick=\"exportRecToCsv('Recucle.csv');\" id=\"exportToCSV\" style=\"position:absolute;width:80px;height:22px\">CSV</div>";
+        s = s + "<div class=\"submit\" onclick=\"exportRecToXml('Recucle.xml');\" id=\"exportToXML\" style=\"position:absolute;width:80px;height:22px\">XML</div>";
         s = s + "<div class=\"submit\" id='online' style=\"position:absolute;width:120px;height:22px;\" onClick=\"online();\">" + trans[2] + "</div>";
         s = s + "<div class='rectable'>" + form_recucle_table() + "<div>";
         var dd = document.getElementById("recucle");
@@ -1738,7 +1742,7 @@ function doResizeCode() {
         // bt.style.left = imgA.offsetWidth - 250 + "px";
         bt.style.left = imgA.offsetWidth - 105 + "px";
         bt.style.position = "relative";
-        bt.style.top = "-35px";
+        bt.style.top = "-57px";
         //bt.style.top = "-35px";
         bt.style.width = "80px";
         bt.style.height = "22px";
@@ -1750,6 +1754,17 @@ function doResizeCode() {
         bt.style.left = imgA.offsetWidth - 205 + "px";
         bt.style.position = "relative";
         bt.style.top = "-13px";
+        //bt.style.top = "-35px";
+        bt.style.width = "80px";
+        bt.style.height = "22px";
+    }
+
+    bt = document.getElementById("exportToXML");
+    if (bt != null) {
+        // bt.style.left = imgA.offsetWidth - 250 + "px";
+        bt.style.left = imgA.offsetWidth - 288 + "px";
+        bt.style.position = "relative";
+        bt.style.top = "-35px";
         //bt.style.top = "-35px";
         bt.style.width = "80px";
         bt.style.height = "22px";
@@ -1778,7 +1793,7 @@ function doResizeCode() {
     }
 }
 
-function exportRecToCsv(filename, rows) {
+function exportRecToCsv(filename) {
     var table = document.getElementById('tablID');
     var trList = table.getElementsByTagName('tr');
     var tdList = trList[0].getElementsByTagName('td');
@@ -1805,6 +1820,56 @@ function exportRecToCsv(filename, rows) {
 
     csvFile = "\uFEFF" + csvFile;
     var blob = new Blob([csvFile], { type: 'text/csv;charset=UTF-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function exportRecToXml(filename) {
+    var table = document.getElementById('tablID');
+    var trList = table.getElementsByTagName('tr');
+    var tdList = trList[0].getElementsByTagName('td');
+
+    var columnNames = [];
+    for (j = 0; j < IND_D_TABLELENGTH; j++) {
+        columnNames.push(tdList[j].innerHTML);
+        while (-1 != columnNames[j].indexOf(' '))
+            columnNames[j]=columnNames[j].replace(' ', '');
+    }
+
+    var xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    xmlFile += "<OmegaProduction>\n";
+
+    for (var i = 0; i < data.length; i++) {
+        var cur_data = data[i];
+        if (cur_data[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] > 0) {
+            xmlFile += "<item ";
+            for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
+                if (j != IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC)
+                    xmlFile += columnNames[j] + "=\"" + cur_data[j] + "\" ";
+
+            xmlFile += trans[0] + "=\"" + cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] + "\" ";
+            xmlFile += trans[1] + "=\"" + cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] + "\" ";
+            xmlFile += "/>\n";
+        }
+    }
+
+    xmlFile += "</OmegaProduction>";
+
+    xmlFile = "\uFEFF" + xmlFile;
+    var blob = new Blob([xmlFile], { type: 'text/xml;charset=UTF-8;' });
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
