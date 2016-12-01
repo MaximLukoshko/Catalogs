@@ -601,7 +601,8 @@ function class_tree() {
 
 function form_displaying_name(cur_data)
 {
-    return cur_data[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
+    var ret = cur_data[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
+    return ret == " " ? "[***]" : ret;
 }
 
 function tree_composition(par_gr, buff) {
