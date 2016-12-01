@@ -602,7 +602,7 @@ function class_tree() {
 function form_displaying_name(cur_data)
 {
     var ret = cur_data[IND_D_NAME] + " " + cur_data[IND_D_SIGN];
-    return ret == " " ? "[***]" : ret;
+    return ret == " " ? cur_data[IND_D_TABLELENGTH + SH_D_ITEMCODE] : ret;
 }
 
 function tree_composition(par_gr, buff) {
