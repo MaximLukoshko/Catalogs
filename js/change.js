@@ -31,22 +31,24 @@ var findsize = 100;
 
 // Переменные-индексы
 // Предопределённые индексы для массива allSubgrGrData
-var IND_ASGD_IMG_POS      =  0; // Позиция рисунка в массиве imgArray
-var IND_ASGD_DATA_IND     =  1; // Позиция элемента в массиве data
-var IND_ASGD_POSITION     =  2; // Позиция элемента на рисунке
-var IND_ASGD_NAME         =  3; // Наименование
-var IND_ASGD_GR_CLS_CODE  =  4; // Код группы (не равен нулю, если элемент есть в классификаторе). Позже заменяется на id элемента в классификаторе
-var IND_ASGD_SOME_CODE    =  5; // Какой-то код. (SupplyCode)
-var IND_ASGD_GR_SAVED     =  6; // После замены IND_ASGD_GR_CLS_CODE на id элемента в классификаторе сюда записывается сохранённый IND_ASGD_GR_CLS_CODE
-var IND_ASGD_CLS_ID       =  7; // Если элемент есть в классификаторе, то сюда записывается id раздела, внутри которого содержатся рисунки элемента
+var IND_ASGD_IMG_POS          =  0; // Позиция рисунка в массиве imgArray
+var IND_ASGD_DATA_IND         =  1; // Позиция элемента в массиве data
+var IND_ASGD_POSITION         =  2; // Позиция элемента на рисунке
+var IND_ASGD_NAME             =  3; // Наименование
+var IND_ASGD_GR_CLS_CODE      =  4; // Код группы (не равен нулю, если элемент есть в классификаторе). Позже заменяется на id элемента в классификаторе
+var IND_ASGD_SOME_CODE        =  5; // Какой-то код. (SupplyCode)
+var IND_ASGD_GR_SAVED         =  6; // После замены IND_ASGD_GR_CLS_CODE на id элемента в классификаторе сюда записывается сохранённый IND_ASGD_GR_CLS_CODE
+var IND_ASGD_CLS_ID           =  7; // Если элемент есть в классификаторе, то сюда записывается id раздела, внутри которого содержатся рисунки элемента
 
 // Предопределённые индексы для массива data
-var IND_D_IMG          =  0; // Номер картинки
-var IND_D_POSITION     =  1; // Позиция элемента на рисунке
-var IND_D_SIGN         =  2; // Обозначение
-var IND_D_NAME         =  3; // Наименование
-var IND_D_WEIGHT       =  4; // Масса
-var IND_D_COHERED_TO   =  5; // Связность
+var IND_D_IMG                    =  0; // Номер картинки
+var IND_D_POSITION               =  1; // Позиция элемента на рисунке
+var IND_D_SIGN                   =  2; // Обозначение
+var IND_D_NAME                   =  3; // Наименование
+var IND_D_WEIGHT                 =  4; // Масса
+var IND_D_COHERED_TO             =  5; // Связность
+var IND_D_GROUP_FULL_NAME        =  6; // Полное название группы
+var IND_D_SUBGROUP_FULL_NAME     =  7; // Полное название подгруппы
 
 // Плавающая переменная. Её значение изменяется в зависимости от количества колонок в таблице
 var IND_D_TABLELENGTH  = 11; 
@@ -57,8 +59,6 @@ var SH_D_QUANT_TO_ADD_TO_REC = -2; // Количество элементов для добавления в корз
 var SH_D_QUANT_AT_RECYCLE    = -1; // Количество в корзине
 var SH_D_ITEMCODE            =  0; // Код элемента
 var SH_D_INCCODE             =  1; // Код входимости
-var SH_D_GROUP_FULL_NAME     =  2; // Полное название группы
-var SH_D_SUBGROUP_FULL_NAME  =  3; // Полное название подгруппы
 
 
 
@@ -443,13 +443,23 @@ function setup(ul) {
     doResizeCode();
 }
 
+function formatGrSubgrName( sgn, nme )
+{
+    if (grSubgrShowMode == 2)
+        return sgn + '. ' + nme; // Код. Наименование /
+    else if (grSubgrShowMode == 1)
+        return sgn;
+    else
+        return nme;
+}
+
 function fillEmptyFields(cur_asgd, cur_data, cur_gr_name, cur_subgr_name) {
     if (cur_asgd[IND_ASGD_POSITION] == '-1')
         cur_asgd[IND_ASGD_IMG_POS] = numbimg(cur_data[IND_D_IMG]);
     cur_data[IND_D_NAME] = cur_asgd[IND_ASGD_NAME];
     cur_data[IND_D_TABLELENGTH + SH_D_QUANT_AT_RECYCLE] = 0;
-    cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] = cur_gr_name[1] + ". " + cur_gr_name[0];
-    cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] = cur_subgr_name[1] + ". " + cur_subgr_name[0];
+    cur_data[IND_D_GROUP_FULL_NAME] = formatGrSubgrName(cur_gr_name[1], cur_gr_name[0]);
+    cur_data[IND_D_SUBGROUP_FULL_NAME] = formatGrSubgrName(cur_subgr_name[1], cur_subgr_name[0]);
 }
 
 var d = 0;
@@ -465,13 +475,12 @@ function func_group(par_ind, buff) {
         // Строка, формирующая подгруппы и элементы подгрупп для данной группы.
         // !!! note_001_mal !!! 'group_content' формируется без закрывающего тега </div>,
         // поэтому после завершения формирования строк с дочерними группами в buff необходимо добавить этот самый тег
-        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")'  ><font size=\"2\" color=\"navy\">" + grNames[i][1] + ". " + grNames[i][0] + "</font></div>";
+        group_content += "<img id='img" + i + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")' style='cursor:pointer'><div class='cur2' id='li" + i + "' onClick='javascript:changeDisplay(" + i + ");javascript:settables_for_group(" + i + ")'  ><font size=\"2\" color=\"navy\">" + formatGrSubgrName(grNames[i][1], grNames[i][0]) + "</font></div>";
         group_content += "<div  id='ul" + i + "' style='display:none; margin-left:10px; padding-bottom: 6px'>";
         //Формируем подгруппы, входящие в группы
         for (var j = 0; j < allSubgrGrNames[i].length; j++) {
             var nn = 0;
-            allSubgrGrNames[i][j][1] = '';
-            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][IND_D_IMG] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + allSubgrGrNames[i][j][1] + " " + allSubgrGrNames[i][j][0] + "</div>";
+            group_content += "<img id='img" + i + "," + j + "' src='./img/plus.gif' style='cursor:pointer' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");'><div class='cur' id='li" + i + "," + j + "' onClick='javascript:changeDisplay(\"" + i + "," + j + "\");change_image_index(" + allSubgrGrData[jj][0][IND_D_IMG] + ");boxVisible(-1,-1,false,true);settables_for_subgroups(" + i + "," + j + ");' >" + formatGrSubgrName(allSubgrGrNames[i][j][1], allSubgrGrNames[i][j][0]) + "</div>";
             group_content += "<div id='ul" + i + "," + j + "'style='display:none;margin-left:17px;cursor:pointer;padding-bottom: 4px'>";
             //Формируем элементы, входящие в группы
             for (var k = 0; k < allSubgrGrData[jj].length; k++) {
@@ -1810,7 +1819,7 @@ function exportRecToCsv(filename) {
         var cur_data = data[i];
         if (cur_data[IND_D_TABLELENGTH+SH_D_QUANT_AT_RECYCLE] > 0) {
 
-            csvFile += cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] + ";" + cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] + ";";
+            csvFile += cur_data[IND_D_GROUP_FULL_NAME] + ";" + cur_data[IND_D_SUBGROUP_FULL_NAME] + ";";
 
             for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
                 if (j != IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC)
@@ -1860,9 +1869,6 @@ function exportRecToXml(filename) {
             for (j = IND_D_SIGN; j < IND_D_TABLELENGTH; j++)
                 if (j != IND_D_TABLELENGTH + SH_D_QUANT_TO_ADD_TO_REC)
                     xmlFile += columnNames[j] + "=\"" + cur_data[j] + "\" ";
-
-            xmlFile += trans[0] + "=\"" + cur_data[IND_D_TABLELENGTH + SH_D_GROUP_FULL_NAME] + "\" ";
-            xmlFile += trans[1] + "=\"" + cur_data[IND_D_TABLELENGTH + SH_D_SUBGROUP_FULL_NAME] + "\" ";
             xmlFile += "/>\n";
         }
     }
