@@ -1062,7 +1062,7 @@ function find_by_name(find_array)
         }
 
         var dat_ind=find_array[cur_index][0];
-        var s = find_array[cur_index][3];
+        var s = find_array[cur_index][3] + "";
         s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
         if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1)
         {
@@ -1079,7 +1079,7 @@ function find_by_name(find_array)
     if (cur_index == start_index)
     {
         var dat_ind = find_array[cur_index][0];
-        var s = find_array[cur_index][3];
+        var s = find_array[cur_index][3] + "";
         s = s.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
         if (s.toLowerCase().indexOf(findv.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "").toLowerCase()) + 1) {
             var asgd_i = find_array[cur_index][1];
@@ -1143,6 +1143,9 @@ function setcolored(current, color) {
             aa = data.length;
         for (var k = a; k <= aa; k++) {
             if (data[k - 1][IND_D_IMG] == data[current - 1][IND_D_IMG] && data[k - 1][IND_D_POSITION] == data[current - 1][IND_D_POSITION]) {
+                if (data[current - 1][IND_D_POSITION] == '' && k != current)
+                    continue;
+
                 selarr[selindex] = k;
                 selindex++;
                 var kk = document.getElementById(k);
@@ -1252,7 +1255,6 @@ function showclass() {
     var img = document.getElementById('classimg');
     if (func_groups_showed == 1) {
         img.src = "./img/minusbig.gif";
-        var imgD = document.getElementById("imgD");
         var uls = document.getElementById("uls");
         var gr = document.getElementById("group");
         var t = document.getElementById("tablID");
@@ -1280,7 +1282,6 @@ function showcomposition() {
     var img = document.getElementById('classcompimg');
     if (tree_comp_showed == 1) {
         img.src = "./img/minusbig.gif";
-        var imgD = document.getElementById("imgD");
         var ulcomp = document.getElementById("ulcomp");
         var gr = document.getElementById("group");
         var t = document.getElementById("tablID");
@@ -1322,6 +1323,12 @@ function change(current, area_index, img_index, p, pp) {
                 setcolored(current, "#BBBBBB");
                 boxVisible(-1, -1, true, true);
                 tree_item_opened = true;
+            }
+            else {
+                setcolored(current, "#AA0000");
+                curimg = -1;
+                var image = document.getElementById("mainImage");
+                image.src = "./img/back_img.jpg";
             }
         }
         sel_item = true;
@@ -1537,30 +1544,19 @@ function change_image_flag(flag) {
     var ss = trans[12] + ": " + imgarray[curimg][1];
     imgname.innerHTML = ss;
     if (curimg < newCoords.length) {
-        //if (prev_image !=curimg)
-        {
-            var imgd = document.getElementById("imgD");
-            //if (widths[curimg] > height[curimg])
-            //{ 
-            //if (widths[curimg] / height[curimg]<1.2)
-            //k = imgd.offsetWidth / widths[curimg]*0.7 ;
-            // else
-            // k = imgd.offsetWidth / widths[curimg]*0.9 ;}
-            //else
-            k = imgd.offsetHeight / height[curimg] * 0.9;
-            if (k > 1) {
-                demoSlider.setValue(1);
-                k = 1;
-            } else
-                demoSlider.setValue(k);
-            prev_image = curimg;
-            setmap(curimg);
-            scaleIt(k, widths, height);
-            var imageDiv = document.getElementById("mainImage");
-            //var imgs = document.getElementById("mainImage");
-            document.images.show.style.widths = imageDiv.style.width;
-            document.images.show.style.height = imageDiv.style.height;
-        }
+        var imgd = document.getElementById("imgD");
+        k = imgd.offsetHeight / height[curimg] * 0.9;
+        if (k > 1) {
+            demoSlider.setValue(1);
+            k = 1;
+        } else
+            demoSlider.setValue(k);
+        prev_image = curimg;
+        setmap(curimg);
+        scaleIt(k, widths, height);
+        var imageDiv = document.getElementById("mainImage");
+        document.images.show.style.widths = imageDiv.style.width;
+        document.images.show.style.height = imageDiv.style.height;
     } else
         flag = true;
     if (flag) {
