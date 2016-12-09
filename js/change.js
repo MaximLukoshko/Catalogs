@@ -4,8 +4,6 @@ var myWin;
 var jst;
 var cur = -1;
 var prev = -1;
-var prev1 = -1;
-var prev2 = -1;
 var sel_item = false;
 var prevfind = "";
 var gr;
@@ -594,6 +592,7 @@ function class_tree() {
                                 var displaying_name = form_displaying_name(cur_data);
                                 order_classify.push([data_ind, jj, k, displaying_name]);
 
+                                bol = cur_asgd[IND_ASGD_DATA_IND] + 1000000;
                                 v.innerHTML += "<img src='./img/dot_tree.gif' style='margin-left:-11px;'><a style='cursor:pointer' onClick='javascript:change(" + cur_asgd[IND_ASGD_DATA_IND] + "," + cur_asgd[IND_ASGD_POSITION] + "," + cur_asgd[IND_ASGD_IMG_POS] + ");scrollIV(\"ul" + tr_comp_id + "\",\"ulcomp\");scrollIV(" + cur_asgd[IND_ASGD_DATA_IND] + ",\"uls\");'><div  style='margin-top:-14px;left:0px;cursor:pointer;text-indent:-2px;' class='bolt' id='b" + bol + "'>" + trans[12] + " " + cur_data[IND_D_IMG] + ", " + trans[13] + " " + cur_data[IND_D_POSITION] + "</div></a>";
                                 cur_asgd[IND_ASGD_GR_SAVED] = cur_asgd[IND_ASGD_GR_CLS_CODE];
                                 cur_asgd[IND_ASGD_CLS_ID] = m;
@@ -665,7 +664,7 @@ function build_tree(codegr, codeupgr) {
                 if (grClassify[i][3] == 0)
                     ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
                 else
-                    ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ")'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");setcolored(\"li" + grClassify[i][0] + "\",\"#abc3e7\");change_image_index(" + grClassify[i][3] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
+                    ss += "<img id='img" + grClassify[i][0] + "' src='./img/plus.gif' onClick='javascript:changeDisplay(" + grClassify[i][0] + ")'><div id='li" + grClassify[i][0] + "' onClick='javascript:changeDisplay(" + grClassify[i][0] + ");setColoredAndScroll(\"li" + grClassify[i][0] + "\",\"#abc3e7\");change_image_index(" + grClassify[i][3] + ");' class='curclass' style='margin-top:-14px;margin-left:10px;cursor:pointer' >" + grClassify[i][2] + "</div>";
                 ss += "<div id='ul" + grClassify[i][0] + "' style='display:none;margin-left:10px'>";
                 build_tree(grClassify[i][0], grClassify[i][1])
                 ss += "</div>";
@@ -1131,7 +1130,7 @@ function scaleIt(v, width, height) {
     boxVisible(curimg, curpos, true, true);
 }
 
-function setcolored(current, color) {
+function setColoredAndScroll(current, color) {
     if (current > 0)
     {
         var a = current - findsize;
@@ -1149,13 +1148,22 @@ function setcolored(current, color) {
                 selarr[selindex] = k;
                 selindex++;
                 var kk = document.getElementById(k);
-                kk.style.background = color;
-                //          var t = k + 2000000;
-                //          kk = document.getElementById("li" + t);
-                //          kk.style.background = color;
+                if (kk)
+                    kk.style.background = color;
+
+                //Красим запись в дереве по составу
+                k += 1000000;
+                scrollIV('b' + k, "ulclassify");
+                setItemColoredById('b' + k, color);
+
+                k += 1000000;
+                setItemColoredById('tc' + k, color);
+                scrollIV('tc' + k, "ulcomp");
+                k -= 2000000;
+
             }
-            //else selarr[selindex] = -1;
         }
+        prev = current;
     }
     var t = 0;
     while (t < selarr.length) {
@@ -1163,11 +1171,6 @@ function setcolored(current, color) {
             var s = document.getElementById(prevselarr[t]);
             if (s != null)
                 s.style.background = "#ffffff";
-
-            //          var k = prevselarr[t] + 2000000;
-            //          s = document.getElementById("li" + k);
-            //          if (s != null)
-            //              s.style.background = "#ffffff";
         }
         t++;
     }
@@ -1177,37 +1180,18 @@ function setcolored(current, color) {
         selarr[t] = -1;
         t++;
     }
-    /*if (prev!=-1 && prev!=current)
-        {
-            var s = document.getElementById(prev);     
-            if (s!=null) s.style.background = "#ffffff";
-               
-        } */
-    //  prev=current; 
 }
 
-function setcolored1(current) {
+function setItemColoredById(current, color) {
     var k = document.getElementById(current);
-    if (prev1 != -1 && prev1 != current) {
-        var s = document.getElementById(prev1);
+    if (prev != -1 && prev != current)
+    {
+        var s = document.getElementById(prev);
         s.style.background = "#ffffff";
     }
 
     if (k)
-    {
-        k.style.background = "#aac3e7";
-        prev1 = current;
-    }
-}
-
-function setcolored2(current) {
-    var k = document.getElementById(current);
-    k.style.background = "#aac3e7";
-    if (prev2 != -1 && prev2 != current) {
-        var s = document.getElementById(prev2);
-        s.style.background = "#ffffff";
-    }
-    prev2 = current;
+        k.style.background = color;
 }
 
 function getImageSrc(prefix, flag) {
@@ -1314,18 +1298,18 @@ function change(current, area_index, img_index, p, pp) {
             tree_item_opened = true;
             if (data[current - 1][IND_D_POSITION] != '') {
                 boxVisible(img_index, area_index, tree_item_opened, true);
-                setcolored(current, "#abc3e7");
+                setColoredAndScroll(current, "#abc3e7");
             }
         } else {
             if (img_index != '-1') {
                 if (curimg != img_index)
                     change_image_index(img_index);
-                setcolored(current, "#BBBBBB");
+                setColoredAndScroll(current, "#BBBBBB");
                 boxVisible(-1, -1, true, true);
                 tree_item_opened = true;
             }
             else {
-                setcolored(current, "#AA0000");
+                setColoredAndScroll(current, "#EE0000");
                 curimg = -1;
                 var image = document.getElementById("mainImage");
                 image.src = "./img/back_img.jpg";
@@ -1349,10 +1333,7 @@ function change(current, area_index, img_index, p, pp) {
                         scrollIV(current, "uls");
 
                         openItemTree(current - 1);  //Раскрываем дерево по составу
-                        current += 2000000;
-                        setcolored2('tc' + current);
-                        scrollIV('tc' + current, "ulcomp");
-                        current -= 2000000;
+
 
                         var aa = current - (h - allSubgrGrData[t].length) - 1;
                         var c = allSubgrGrData[t][aa][IND_ASGD_GR_CLS_CODE];
@@ -1362,17 +1343,15 @@ function change(current, area_index, img_index, p, pp) {
                             img = document.getElementById("img" + c);
                             if (img)
                                 img.src = "./img/minus.gif";
-                            setcolored1('b' + c);
                             open_tree(c, cl);
-                            scrollIV('b' + c, "ulclassify");
                         } else {
-                            if (prev1 != -1) {
-                                var s = document.getElementById(prev1);
+                            if (prev != -1) {
+                                var s = document.getElementById('tc'+prev);
                                 if (s != undefined)
                                     s.style.background = "#ffffff";
                             }
-                            if (prev2 != -1) {
-                                var s = document.getElementById(prev2);
+                            if (prev != -1) {
+                                var s = document.getElementById('b'+prev);
                                 if (s != undefined)
                                     s.style.background = "#ffffff";
                             }
@@ -1399,7 +1378,7 @@ function change(current, area_index, img_index, p, pp) {
                 tdListName[j].innerHTML = "";
         }
         boxVisible(-1, -1, true, true);
-        setcolored(-1);
+        setColoredAndScroll(-1, "#ffffff");
     }
 }
 
@@ -1519,10 +1498,10 @@ function clear_sel() {
     var k = document.getElementById(prev);
     if (k != undefined)
         k.style.background = "#ffffff";
-    k = document.getElementById(prev1);
+    k = document.getElementById('tc'+prev);
     if (k != undefined)
         k.style.background = "#ffffff";
-    k = document.getElementById(prev2);
+    k = document.getElementById('b' + prev);
     if (k != undefined)
         k.style.background = "#ffffff";
 }
