@@ -1028,6 +1028,13 @@ function findIt(findtype)
 //find_array : [[data_index, allsubgrgrdata_i, allsubgrgrdata_j, displaying name ],...]
 function find_by_name(find_array)
 {
+    if (find_array.length <= 0)
+    {
+        curfind = -1;
+        change(-1, -1, -1);
+        return;
+    }
+
     var findv = document.getElementById('typef').value;
     var start_index = -1;
 
