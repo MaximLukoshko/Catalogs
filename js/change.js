@@ -1154,51 +1154,62 @@ function setColoredAndScroll(current, color) {
 
                 selarr[selindex] = k;
                 selindex++;
-                var kk = document.getElementById(k);
-                if (kk)
-                    kk.style.background = color;
+                setItemColoredById(k, color);
+                scrollItemsById(k);
 
-                //Красим запись в дереве по составу
-                k += 1000000;
-                scrollIV('b' + k, "ulclassify");
-                setItemColoredById('b' + k, color);
-
-                k += 1000000;
-                setItemColoredById('tc' + k, color);
-                scrollIV('tc' + k, "ulcomp");
-                k -= 2000000;
 
             }
         }
         prev = current;
     }
     var t = 0;
-    while (t < selarr.length) {
-        if (selarr[t] != prevselarr[t]) {
-            var s = document.getElementById(prevselarr[t]);
-            if (s != null)
-                s.style.background = "#ffffff";
-        }
+    while (t < selarr.length)
+    {
+        if (selarr[t] != prevselarr[t])
+            setItemColoredById(prevselarr[t], "#ffffff");
         t++;
     }
     t = 0;
-    while (t < selarr.length) {
+    while (t < selarr.length)
+    {
         prevselarr[t] = selarr[t];
         selarr[t] = -1;
         t++;
     }
 }
 
-function setItemColoredById(current, color) {
-    var k = document.getElementById(current);
-    if (prev != -1 && prev != current)
-    {
-        var s = document.getElementById(prev);
-        s.style.background = "#ffffff";
-    }
+function scrollItemsById(current) {
+    if (prev != current) {
+        scrollIV(current, "uls");
 
-    if (k)
-        k.style.background = color;
+        current += 1000000;
+        scrollIV('b' + current, "ulclassify");
+
+        current += 1000000;
+        scrollIV('tc' + current, "ulcomp");
+    }
+}
+
+function setItemColoredById(current, color, need_scroll) {
+    if (prev != current)
+    {
+        setBackGroundColorById(current, color);
+
+        //Красим запись в дереве по составу
+        current += 1000000;
+        setBackGroundColorById('b' + current, color);
+
+        //Красим запись в классификаторах
+        current += 1000000;
+        setBackGroundColorById('tc' + current, color);
+    }
+}
+
+function setBackGroundColorById(current, color)
+{
+    var kk = document.getElementById(current);
+    if (kk)
+        kk.style.background = color;
 }
 
 function getImageSrc(prefix, flag) {
