@@ -1438,8 +1438,9 @@ function boxVisible(imageNum, num, visible, force) {
     }
     if (imageNum > newCoords.length)
         return;
-    if (num > newCoords[imageNum].length)
+    if (num > newCoords[imageNum].length || newCoords[imageNum].length == 0)
         return;
+
     var cnum = newCoords[imageNum][num][0];
     var p = {
         x: 0,
@@ -1482,23 +1483,6 @@ function boxVisible(imageNum, num, visible, force) {
                     }
                 }
             }
-            /*box = document.getElementById("div" + 4 + "" + k);
-if (box != null) {
-    
-    box.style.marginLeft = c[0]+2 + "px";
-    box.style.marginTop = c[1]+2 + "px";
-    box.style.width = c[2]-c[0] + "px";
-    box.style.height = c[3] - c[1] + "px";
-    box.style.opacity = "0.2";
-    box.style.backgroundColor = "#AA0000";
-    if (visible)
-        box.style.display = "block";
-    else {
-        if (!tree_item_opened)
-            box.style.display = "none";
-    }
-        
-    } */
             k++;
         }
         s++;
