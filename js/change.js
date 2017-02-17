@@ -1236,17 +1236,17 @@ function showclassify() {
     if (classifier_showed == 1) {
         img.src = "./img/minusbig.gif";
         
-	var uls = document.getElementById("ulclassify");
+    var uls = document.getElementById("ulclassify");
         
-	if (tree_comp_showed == 0)
+    if (tree_comp_showed == 0)
             showcomposition();
         
-	if (func_groups_showed == 0)
-            showclass();	
-	
-	uls.style.height = document.body.clientHeight - 165 + "px";
+    if (func_groups_showed == 0)
+            showclass();    
+    
+    uls.style.height = document.body.clientHeight - 165 + "px";
         
-	classifier_showed = 0;
+    classifier_showed = 0;
     } else {
         var uls = document.getElementById("ulclassify");
         uls.style.height = "0px";
@@ -1262,15 +1262,15 @@ function showclass() {
         var uls = document.getElementById("uls");
         var ulsc = document.getElementById("ulclassify");
         
-	if (tree_comp_showed == 0)
+    if (tree_comp_showed == 0)
             showcomposition();
         
-	if (classifier_showed == 0)
+    if (classifier_showed == 0)
             showclassify();
         
-	uls.style.height = document.body.clientHeight - 165 + "px";
+    uls.style.height = document.body.clientHeight - 165 + "px";
         
-	func_groups_showed = 0;
+    func_groups_showed = 0;
     } else {
         var uls = document.getElementById("uls");
         uls.style.height = "0px";
@@ -1284,15 +1284,15 @@ function showcomposition() {
     if (tree_comp_showed == 1) {
         img.src = "./img/minusbig.gif";
         
-	var ulcomp = document.getElementById("ulcomp");
+    var ulcomp = document.getElementById("ulcomp");
         
-	if (func_groups_showed == 0)
+    if (func_groups_showed == 0)
             showclass();
         
-	if (classifier_showed == 0)
-            showclassify();	
+      if (classifier_showed == 0)
+            showclassify();    
         
-	ulcomp.style.height = document.body.clientHeight - 165 + "px";
+    ulcomp.style.height = document.body.clientHeight - 165 + "px";
         tree_comp_showed = 0;
     } else {
         var ulcomp = document.getElementById("ulcomp");
@@ -1559,7 +1559,7 @@ function OpenImagePopup(imgPath, title, alt, name) {
     if (alt == undefined)
         alt = 'My Image, Click to Close';
     var content = "<script type='text/javascript' src='./js/change.js'></script>" + '<html><head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1251\"><title>' + title + '</title>' + '<style>body{overflow: hidden;margin:0;}img{border:0;}b {font-weight: bold;}</style>' + "</head><body>" + "<div style='position:relative;height:30px;border: 1px solid #cacaca;'>";
-    content += "<div id='counter' style='position:relative;font: 11px Tahoma;	color: #464546;margin-top:10px;margin-left:10px' >" + name + "      " + trans[12] + ":1/" + grIllustrationNames[cur_Ill].length + "   " + "<b>" + grIllustrationNames[cur_Ill][0] + "</b></div>";
+    content += "<div id='counter' style='position:relative;font: 11px Tahoma;    color: #464546;margin-top:10px;margin-left:10px' >" + name + "      " + trans[12] + ":1/" + grIllustrationNames[cur_Ill].length + "   " + "<b>" + grIllustrationNames[cur_Ill][0] + "</b></div>";
     content += "<div style='position:relative;left:500px;top:-20px;'><table><tr>";
     content += "<td><a href='javascript:previllustr()'> << </a></td>";
     for (var j = 1; j <= cnt; j++) {
