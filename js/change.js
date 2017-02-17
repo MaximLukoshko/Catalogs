@@ -1235,16 +1235,18 @@ function showclassify() {
     var img = document.getElementById('classifimg');
     if (classifier_showed == 1) {
         img.src = "./img/minusbig.gif";
-        var gr = document.getElementById("group");
-        var t = document.getElementById("tablID");
-        var uls = document.getElementById("ulclassify");
-        var h1 = gr.offsetHeight;
-        var h2 = t.offsetHeight;
-        if (func_groups_showed == 1 && tree_comp_showed == 1)
-            uls.style.height = document.body.clientHeight - 160 + "px";
-        else
-            uls.style.height = h1 + h2 + "px";
-        classifier_showed = 0;
+        
+	var uls = document.getElementById("ulclassify");
+        
+	if (tree_comp_showed == 0)
+            showcomposition();
+        
+	if (func_groups_showed == 0)
+            showclass();	
+	
+	uls.style.height = document.body.clientHeight - 165 + "px";
+        
+	classifier_showed = 0;
     } else {
         var uls = document.getElementById("ulclassify");
         uls.style.height = "0px";
@@ -1258,23 +1260,20 @@ function showclass() {
     if (func_groups_showed == 1) {
         img.src = "./img/minusbig.gif";
         var uls = document.getElementById("uls");
-        var gr = document.getElementById("group");
-        var t = document.getElementById("tablID");
-        var h1 = gr.offsetHeight;
-        var h2 = t.offsetHeight;
         var ulsc = document.getElementById("ulclassify");
-        if (tree_comp_showed == 0)
+        
+	if (tree_comp_showed == 0)
             showcomposition();
-        if (classifier_showed == 0)
-            ulsc.style.height = h1 + h2 + "px";
-        uls.style.height = document.body.clientHeight - 310 + "px";
-        func_groups_showed = 0;
+        
+	if (classifier_showed == 0)
+            showclassify();
+        
+	uls.style.height = document.body.clientHeight - 165 + "px";
+        
+	func_groups_showed = 0;
     } else {
         var uls = document.getElementById("uls");
         uls.style.height = "0px";
-        var ulsc = document.getElementById("ulclassify");
-        if (classifier_showed == 0)
-            ulsc.style.height = document.body.clientHeight - 165 + "px";
         img.src = "./img/plusbig.gif";
         func_groups_showed = 1;
     }
@@ -1284,24 +1283,20 @@ function showcomposition() {
     var img = document.getElementById('classcompimg');
     if (tree_comp_showed == 1) {
         img.src = "./img/minusbig.gif";
-        var ulcomp = document.getElementById("ulcomp");
-        var gr = document.getElementById("group");
-        var t = document.getElementById("tablID");
-        var h1 = gr.offsetHeight;
-        var h2 = t.offsetHeight;
-        var ulsc = document.getElementById("ulclassify");
-        if (func_groups_showed == 0)
+        
+	var ulcomp = document.getElementById("ulcomp");
+        
+	if (func_groups_showed == 0)
             showclass();
-        if (classifier_showed == 0)
-            ulsc.style.height = h1 + h2 + "px";
-        ulcomp.style.height = document.body.clientHeight - 310 + "px";
+        
+	if (classifier_showed == 0)
+            showclassify();	
+        
+	ulcomp.style.height = document.body.clientHeight - 165 + "px";
         tree_comp_showed = 0;
     } else {
         var ulcomp = document.getElementById("ulcomp");
         ulcomp.style.height = "0px";
-        var ulsc = document.getElementById("ulclassify");
-        if (classifier_showed == 0)
-            ulsc.style.height = document.body.clientHeight - 165 + "px";
         img.src = "./img/plusbig.gif";
         tree_comp_showed = 1;
     }
