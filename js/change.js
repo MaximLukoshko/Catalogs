@@ -1702,9 +1702,6 @@ function doResizeCode() {
         leftcol.style.height = imgA.offsetHeight + "px";
     }
     var l = document.getElementById("l");
-    var scr = document.getElementById("scroll");
-    scr.style.top = "0px";
-    scr.style.height = imgA.offsetHeight - 70 + "px";
     bt = document.getElementById("check");
     if (bt != null) {
         bt.style.left = document.body.clientWidth - 108 + "px";
